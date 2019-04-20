@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+
+# ここから自分で追加した分
+
+# Files
+*.suo
+*.log
+*.exe
+*.user
+
+# Library
+DxLib_h/
+
+#Resource
+MiniatureGardenTanks/Data/ResourceFiles/
