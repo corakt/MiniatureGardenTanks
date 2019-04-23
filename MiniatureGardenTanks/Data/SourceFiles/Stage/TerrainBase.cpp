@@ -4,11 +4,10 @@
 /*-------------------------------------------*/
 /* コンストラクタ
 /*-------------------------------------------*/
-TerrainBase::TerrainBase(int modelHandle, TerrainId terrainId, ModelType type)
-	:ModelObject::ModelObject(modelHandle, type)
+TerrainBase::TerrainBase()
 {
-	// 地形IDを取得
-	this->id = terrainId;
+	// 地形のタグを設定
+	
 }
 
 /*-------------------------------------------*/
@@ -27,7 +26,7 @@ void TerrainBase::commonInitialize()
 	// 各変数の初期化
 	transform.scale = VGet(3, 3, 3);	// モデルのスケール
 	isActive        = true;				// 稼働中かどうか
-	isDraw          = true;				// 描画中かどうか
+	terrainModel->SetDrawFlag(true);	// 描画フラグをセット
 }
 
 /*-------------------------------------------*/
@@ -61,7 +60,7 @@ void TerrainBase::Draw()
 		if (CheckCameraViewClip_Box(rectPos1, rectPos2) == false)
 		{
 			// 視界に存在している地形のみ描画する
-			DrawModel();
+			terrainModel->DrawModel();
 		}
 	}
 }

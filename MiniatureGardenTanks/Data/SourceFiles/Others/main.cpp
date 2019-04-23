@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR lpszCmdLine, i
 	// ウィンドウサイズを設定
 	SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	// ウィンドウモード
-	//ChangeWindowMode(TRUE);
+	ChangeWindowMode(TRUE);
 
 	// DXライブラリの初期化処理
 	if (DxLib_Init() == -1)

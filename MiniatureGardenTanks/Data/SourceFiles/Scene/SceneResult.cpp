@@ -2,7 +2,7 @@
 #include "../Stage/StageManager.h"
 #include "../ResourcesManager/OtherResources.h"
 #include "../Character/CharacterManager.h"
-#include "../BaseObject/ObjectIdManager.h"
+#include "../BaseObject/IdGenerator.h"
 #include "../Others/Input.h"
 #include "../Camera/CameraBase.h"
 #include "../ResourcesManager/ResourceSpriteManager.h"
@@ -11,12 +11,12 @@
 #include "../Others/HelperFunction.h"
 #include "../Collision/CollisionManager.h"
 
-const CharacterBase::CharacterType SceneResult::CHARACTER_TYPE   = CharacterBase::CharacterType::PLAYER;	// キャラクターの種類
-const VECTOR SceneResult::CHARACTER_POSITION[]                   = { VGet(15000,100,15000) };				// キャラクターの位置
-const float SceneResult::CHARACTER_BODYANGLE[]                   = {DX_PI_F};								// キャラクターの車体角度
-const COLOR_F SceneResult::CHARACTER_MODELCOLOR[]                = { GetColorF(1,0.2f,0,1) };				// キャラクターのモデルの色
+const CharacterBase::CharacterType SceneResult::CHARACTER_TYPE = CharacterBase::CharacterType::PLAYER;		// キャラクターの種類
+const VECTOR SceneResult::CHARACTER_POSITION[]                 = { VGet(15000,100,15000) };					// キャラクターの位置
+const float SceneResult::CHARACTER_BODYANGLE[]                 = {DX_PI_F};									// キャラクターの車体角度
+const COLOR_F SceneResult::CHARACTER_MODELCOLOR[]              = { GetColorF(1,0.2f,0,1) };					// キャラクターのモデルの色
 
-const VECTOR SceneResult::CAMERA_POSITION = VGet(14100,500,14100);		// カメラの位置
+const VECTOR SceneResult::CAMERA_POSITION = VGet(14100,500,14100);				// カメラの位置
 
 const VECTOR SceneResult::LOGO_SPRITE_POS = VGet(400, 300, 0);					// ロゴの表示位置
 const VECTOR SceneResult::BACKTITLE_BUTTON_SPRITE_POS = VGet(400, 850, 0);		// 「タイトルへ戻る」の表示位置
@@ -112,9 +112,6 @@ void SceneResult::Initialize()
 
 	// 衝突判定の管理クラスの初期化処理
 	COLLISION_MANAGER.Initialize();
-
-	// オブジェクトIDの管理クラスの初期化
-	OBJECTID_MANAGER.Initialize();
 
 	// キャラクターの初期化処理
 	CHARACTER_MANAGER.Initialize(CHARACTER_POSITION, CHARACTER_BODYANGLE, CHARACTER_MODELCOLOR);

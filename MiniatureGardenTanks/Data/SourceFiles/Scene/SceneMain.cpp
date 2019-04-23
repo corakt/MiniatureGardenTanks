@@ -8,7 +8,7 @@
 #include "../CharacterShot/ShotManager.h"
 #include "../Raycast/RaycastManager.h"
 #include "../Collision/CollisionManager.h"
-#include "../BaseObject/ObjectIdManager.h"
+#include "../BaseObject/IdGenerator.h"
 #include "../ResourcesManager/ResourceModelManager.h"
 #include "../ResourcesManager/ResourceSpriteManager.h"
 #include "../ResourcesManager/ResourceSoundManager.h"
@@ -198,9 +198,6 @@ void SceneMain::Initialize()
 
 	// 衝突判定の管理クラスの初期化処理
 	COLLISION_MANAGER.Initialize();
-
-	// オブジェクトIDの管理クラスの初期化
-	OBJECTID_MANAGER.Initialize();
 
 	// キャラクターの初期化処理
 	CHARACTER_MANAGER.Initialize(CHARACTER_POSITION, CHARACTER_BODYANGLE, CHARACTER_MODELCOLOR);

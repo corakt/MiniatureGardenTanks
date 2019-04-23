@@ -7,7 +7,8 @@
 CharacterEnemy::CharacterEnemy(UINT id, CharacterType type)
 	:CharacterBase::CharacterBase(id,type)
 {
-	
+	// キャラクターのオブジェクトの種類を設定
+	objectType = ObjectType::CHARACTER_ENEMY;
 }
 
 /*-------------------------------------------*/

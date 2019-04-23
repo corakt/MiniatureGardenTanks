@@ -51,7 +51,7 @@ struct CharacterCounters
 /*-------------------------------------------*/
 /* キャラクター / 基底クラス
 /*-------------------------------------------*/
-class CharacterBase
+class CharacterBase : public GameObject
 {
 public:
 	// キャラクターの種類
@@ -163,7 +163,7 @@ public:
 	void SetImpactPos(const VECTOR set) { impactPosition = set; }
 
 	// キャラクターの種類
-	const CharacterType& GetType() const { return type; }
+	const CharacterType& GetObjectType() const { return type; }
 
 	// キャラクターの状態
 	const State& GetState() const { return state; }

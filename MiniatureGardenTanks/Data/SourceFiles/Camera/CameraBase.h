@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../BaseObject/Object.h"
+#include "../BaseObject/GameObject.h"
 #include <DxLib.h>
 #include <list>
 
@@ -28,7 +28,7 @@ struct CameraMoveParameter
 /*-------------------------------------------*/
 /* カメラ / 基底クラス
 /*-------------------------------------------*/
-class CameraBase : public Object
+class CameraBase : public GameObject
 {
 public:
 	         CameraBase();		// コンストラクタ

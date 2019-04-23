@@ -56,9 +56,15 @@ CharacterBase::CharacterBase(UINT id, CharacterType type)
 	sounds.engineDecel  = NULL;		// エンジン：減速
 	sounds.crawler      = NULL;		// 履帯音
 
-	// キャラクターの各部品を生成
-	tank[PartsType::BODY]   = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_BODY), ModelType::TANK_BODY);		// 車体
-	tank[PartsType::TURRET] = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_TURRET), ModelType::TANK_TURRET);	// 砲塔
+	// キャラクターの各部品を表すモデルコンポーネントを生成
+	tank[PartsType::BODY]   = AddComponent<ModelObject>();
+	tank[PartsType::TURRET] = AddComponent<ModelObject>();
+	// モデルをセットする
+	tank[PartsType::BODY]->SetHandle(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_BODY));
+	tank[PartsType::TURRET]->SetHandle(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_TURRET));
+	// モデルコンポーネントの種類を設定
+	tank[PartsType::BODY]->SetObjectType(ObjectType::CHARACTER_TANKBODY);
+	tank[PartsType::TURRET]->SetObjectType(ObjectType::CHARACTER_TANKTURRET);
 
 	// 車体部分のモデルをレイキャストの対象のモデルとして登録
 	RAYCAST_MANAGER.SetTargetModel(tank[PartsType::BODY]);
@@ -116,16 +122,13 @@ CharacterBase::~CharacterBase()
 /*-------------------------------------------*/
 void CharacterBase::CalculationTurretRelativePosition()
 {
-	// 砲塔の位置は車体の相対位置になる。
+	// 各部品の相対位置
+	VECTOR BODY_RELATIVE_POS   = VGet(0, 0, 0);
+	VECTOR TURRET_RELATIVE_POS = VGet(0, 200, 0);
 
-	// 砲塔のオフセット値
-	VECTOR turretPosOffset = VGet(0, 200,0);
-
-	// 車体の位置にオフセット値を加えたものを相対位置にする
-	VECTOR turretRelativePos = bodyTransform.position + turretPosOffset;
-
-	// トランスフォームに算出した相対位置をセット
-	turretTransform.position = turretRelativePos;
+	// 相対位置から部品の位置を算出
+	bodyTransform.position   = transform.position + BODY_RELATIVE_POS;
+	turretTransform.position = transform.position + TURRET_RELATIVE_POS;
 }
 
 /*-------------------------------------------*/
@@ -371,7 +374,7 @@ void CharacterBase::commonUpdate()
 			if (collModel == NULL) { continue; }
 
 			// ショットと衝突
-			if (collModel->GetModelType() == ModelType::TANK_SHOT)
+			if (collModel->GetObjectType() == ObjectType::CHARACTER_SHOT)
 			{
 				// コールバック関数
 				onCollisionShot(collModelInfoElem);

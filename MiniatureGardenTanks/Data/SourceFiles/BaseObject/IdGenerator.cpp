@@ -1,34 +1,26 @@
-﻿#include "../BaseObject/ObjectIdManager.h"
+﻿#include "../BaseObject/IdGenerator.h"
 
 /*-------------------------------------------*/
 /* コンストラクタ
 /*-------------------------------------------*/
-ObjectIdManager::ObjectIdManager()
-{
-
-}
-
-/*-------------------------------------------*/
-/* デストラクタ
-/*-------------------------------------------*/
-ObjectIdManager::~ObjectIdManager()
-{
-
-}
-
-/*-------------------------------------------*/
-/* 初期化
-/*-------------------------------------------*/
-void ObjectIdManager::Initialize()
+IdGenerator::IdGenerator()
 {
 	// 乱数生成器の初期シードを設定
 	mt19937.seed(randomDevice());
 }
 
 /*-------------------------------------------*/
-/* オブジェクトIDを生成
+/* デストラクタ
 /*-------------------------------------------*/
-std::uint32_t ObjectIdManager::CreateId()
+IdGenerator::~IdGenerator()
+{
+
+}
+
+/*-------------------------------------------*/
+/* IDを生成
+/*-------------------------------------------*/
+std::uint32_t IdGenerator::Generate()
 {
 	// 一時保存ID
 	std::uint32_t tmpId = 0;
@@ -54,9 +46,9 @@ std::uint32_t ObjectIdManager::CreateId()
 }
 
 /*-------------------------------------------*/
-/* オブジェクトIDを削除
+/* IDを削除
 /*-------------------------------------------*/
-void ObjectIdManager::DestroyId(uint32_t& id)
+void IdGenerator::Delete(uint32_t& id)
 {
 	// 指定されたIDをリストから削除する
 	idList.remove(id);

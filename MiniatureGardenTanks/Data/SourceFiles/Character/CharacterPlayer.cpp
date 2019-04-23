@@ -16,8 +16,15 @@ CharacterPlayer::CharacterPlayer(UINT id, CharacterType type)
 	// NULLで初期化
 	laser = NULL;
 
-	// モデルオブジェクトを生成
-	laser = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_LASER),ModelType::TANK_LASER);
+	// キャラクターのオブジェクトの種類を設定
+	objectType = ObjectType::CHARACTER_PLAYER;
+
+	// レーザーのモデルオブジェクトを生成
+	laser = AddComponent<ModelObject>();
+	// オブジェクトの種類を設定
+	laser->SetObjectType(ObjectType::CHARACTER_LASER);
+	// モデルの種類を
+	//laser = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_LASER),ModelType::TANK_LASER);
 }
 
 /*-------------------------------------------*/

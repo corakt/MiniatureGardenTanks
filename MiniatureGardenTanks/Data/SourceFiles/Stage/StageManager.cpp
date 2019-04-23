@@ -84,7 +84,9 @@ void StageManager::CreateStage()
 			if (wallMapData[z][x] == WALL_MAPDATA_ID)
 			{
 				// 地形の壁を生成
-				terrainWall[z][x] = new TerrainWall(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TERRAIN_WALL), tmpId, ModelType::TERRAIN_WALL);
+				terrainWall[z][x] = new TerrainWall();
+				// 地形IDをセット
+				terrainWall[z][x]->SetId(tmpId);
 				// 生成した地形のインスタンスをリストに挿入
 				activeTerrainWall.push_back(terrainWall[z][x]);
 				activeAllTerrain.push_back(terrainWall[z][x]);
@@ -92,7 +94,9 @@ void StageManager::CreateStage()
 
 			// 地形：地面
 			// 地形の地面を生成
-			terrainGround[z][x] = new TerrainGround(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TERRAIN_GROUND), tmpId, ModelType::TERRAIN_GROUND);
+			terrainGround[z][x] = new TerrainGround();
+			// 地形IDをセット
+			terrainGround[z][x]->SetId(tmpId);
 			// 生成した地形のインスタンスをリストに挿入
 			activeTerrainGround.push_back(terrainGround[z][x]);
 			activeAllTerrain.push_back(terrainGround[z][x]);
@@ -100,7 +104,7 @@ void StageManager::CreateStage()
 	}
 
 	// スカイドームを生成する
-	skydome = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::SKYDOME),ModelType::SKYDOME);
+	//skydome = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::SKYDOME),ModelType::SKYDOME);
 }
 
 /*-------------------------------------------*/
@@ -266,7 +270,6 @@ void StageManager::Initialize()
 /*-------------------------------------------*/
 void StageManager::Update()
 {
-
 	if (activeAllTerrain.empty() == false)
 	{
 		for (TerrainBase*& terrainElem : activeAllTerrain)

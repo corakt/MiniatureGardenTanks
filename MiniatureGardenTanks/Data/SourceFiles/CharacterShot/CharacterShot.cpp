@@ -1,6 +1,7 @@
 ﻿#include "../CharacterShot/CharacterShot.h"
 #include "../Collision/CollisionManager.h"
 #include "../Collision/BoxCollider.h"
+#include "../BaseObject/ModelObject.h"
 #include "../ResourcesManager/ResourceEffectManager.h"
 #include "../ResourcesManager/ResourceSoundManager.h"
 #include "../Others/Define.h"
@@ -11,9 +12,17 @@ const VECTOR CharacterShot::COLLISION_SIZE = VGet(150, 100, 150);	// 衝突範�
 /*-------------------------------------------*/
 /* コンストラクタ
 /*-------------------------------------------*/
-CharacterShot::CharacterShot(int modelHandle,ModelType type)
-	:ModelObject::ModelObject(modelHandle,type)
+CharacterShot::CharacterShot()
 {
+	shotModel = NULL;
+
+	// モデルのコンポーネントを追加
+	shotModel = AddComponent<ModelObject>();
+	// モデルのハンドルをセット
+	shotModel->SetHandle(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_SHOT));
+	// モデルの種類を設定
+	shotModel->SetObjectType(ObjectType::CHARACTER_SHOT);
+
 	// ボックスコライダーを生成
 	boxCollider = COLLISION_MANAGER.AddBoxCollider();
 }
@@ -50,7 +59,7 @@ void CharacterShot::Initialize()
 	// コライダー
 	boxCollider->center        = transform.position;	// ボックスコライダーの基準位置
 	boxCollider->size          = COLLISION_SIZE;		// コライダーのサイズ
-	boxCollider->attachedModel = this;					// コライダーにアタッチするモデル
+	//boxCollider->attachedModel = this;					// コライダーにアタッチするモデル
 	boxCollider->isCollCheck   = true;
 }
 
@@ -82,13 +91,14 @@ void CharacterShot::Update()
 				if (collModel == NULL) { continue; }
 
 				// キャラクタと衝突
-				if (collModel->GetModelType() == ModelType::TANK_BODY)
+				if (collModel->GetObjectType() == ObjectType::CHARACTER_PLAYER ||
+					collModel->GetObjectType() == ObjectType::CHARACTER_ENEMY)
 				{
 					// コールバック関数
 					onCollisionCharacter(collModelInfoElem);
 				}
 				// ステージの壁と衝突
-				else if (collModel->GetModelType() == ModelType::TERRAIN_WALL)
+				else if (collModel->GetObjectType() == ObjectType::TERRAIN_WALL)
 				{
 					// コールバック関数
 					onCollisionTerrainWall(collModelInfoElem);
@@ -105,7 +115,7 @@ void CharacterShot::Draw()
 {
 	if (isActive)
 	{
-		DrawModel();
+		shotModel->DrawModel();
 	}
 }
 
@@ -158,7 +168,7 @@ void CharacterShot::onCollisionCharacter(const CollModelInfo& character)
 	// 稼働フラグをfalseにする
 	isActive = false;
 	// 描画フラグをオフにする
-	isDraw = false;
+	shotModel->SetDrawFlag(false);
 }
 
 /*-------------------------------------------*/
@@ -183,5 +193,5 @@ void CharacterShot::onCollisionTerrainWall(const CollModelInfo& terrainWall)
 	// 稼働フラグをfalseにする
 	isActive = false;
 	// 描画フラグをオフにする
-	isDraw = false;
+	shotModel->SetDrawFlag(false);
 }

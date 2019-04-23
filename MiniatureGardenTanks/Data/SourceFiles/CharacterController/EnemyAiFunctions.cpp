@@ -116,7 +116,7 @@ void ControllerEnemy::getViewingRangeEnemyCharacter()
 		if (collModel == NULL) { continue; }
 
 		// 敵キャラクターのみを登録する
-		if (collModel->GetModelType() != ModelType::TANK_BODY) { continue; }
+		if (collModel->GetObjectType() != ObjectType::CHARACTER_ENEMY) { continue; }
 
 		// 敵キャラクターの車体のトランスフォームを取得
 		Transform enemyCharaBodyTrans = collModel->GetTransform();
@@ -156,7 +156,7 @@ void ControllerEnemy::getAroundRangeWallData()
 		if (collModel == NULL) { continue; }
 
 		// モデルの種類が壁以外だったら、スキップして次の要素へ
-		if (collModel->GetModelType() != ModelType::TERRAIN_WALL) { continue; }
+		if (collModel->GetObjectType() != ObjectType::TERRAIN_WALL) { continue; }
 
 		// ヒットしたモデルのトランスフォームを取得
 		Transform collModelTrans = collModel->GetTransform();
@@ -237,7 +237,7 @@ bool ControllerEnemy::existWallBetweenEnemyAndSelf(EnemyCharacterData enemy)
 	HitModelInfo nearModel = charaViewingDirRaycast->GetHitModelInfo().front();
 
 	// モデルが壁かどうか調べる
-	if (nearModel.hitModel->GetModelType() == ModelType::TERRAIN_WALL)
+	if (nearModel.hitModel->GetObjectType() == ObjectType::TERRAIN_WALL)
 	{
 		// 敵との間に壁が存在しているとみなし、trueを返す
 		return true;

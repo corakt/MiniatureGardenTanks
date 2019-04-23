@@ -1,9 +1,10 @@
 ﻿#pragma once
-#include "../BaseObject/ModelObject.h"
+#include "../BaseObject/GameObject.h"
 #include <EffekseerForDXLib.h>
 #include <functional>
 
 class CharacterBase;
+class ModelObject;
 class TerrainBase;
 class BoxCollider;
 struct CollModelInfo;
@@ -24,11 +25,11 @@ struct ShotCounters
 /*-------------------------------------------*/
 /* キャラクターショット
 /*-------------------------------------------*/
-class CharacterShot : public ModelObject
+class CharacterShot : public GameObject
 {
 public:
-			 CharacterShot(int modelHandle,ModelType type);	// コンストラクタ
-	virtual ~CharacterShot();								// デストラクタ
+			 CharacterShot();		// コンストラクタ
+	virtual ~CharacterShot();		// デストラクタ
 
 	virtual void Initialize();		// 初期化
 	virtual void Update();			// 更新
@@ -49,6 +50,8 @@ private:
 	// 衝突コールバック関数群
 	void onCollisionCharacter(const CollModelInfo& character);		// キャラクター
 	void onCollisionTerrainWall(const CollModelInfo& terrainWall);	// ステージの壁
+
+	ModelObject*  shotModel;				// ショットのモデル
 
 	std::uint32_t firingCharacterObjectId;	// ショットを撃ったキャラクターのオブジェクトID
 

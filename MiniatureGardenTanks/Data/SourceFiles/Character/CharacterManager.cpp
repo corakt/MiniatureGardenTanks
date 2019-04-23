@@ -235,7 +235,7 @@ UINT CharacterManager::GetAliveEnemyTankNum()
 			if (character == NULL) { continue; }
 			
 			// プレイヤーは除外する
-			if (character->GetType() == CharacterBase::CharacterType::PLAYER) { continue; }
+			if (character->GetObjectType() == CharacterBase::CharacterType::PLAYER) { continue; }
 
 			// HPが残っているキャラクターのみ
 			// 生きている戦車としてカウント
@@ -260,7 +260,7 @@ bool CharacterManager::isAlivePlayerTank()
 			if (character == NULL) { continue; }
 			
 			// エネミーは除外する
-			if (character->GetType() == CharacterBase::CharacterType::ENEMY) { continue; }
+			if (character->GetObjectType() == CharacterBase::CharacterType::ENEMY) { continue; }
 
 			// HPが残っていた
 			if (character->GetHitPoint() > 0) { return true; }

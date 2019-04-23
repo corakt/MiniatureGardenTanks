@@ -6,15 +6,19 @@
 // 衝突判定のサイズ
 const VECTOR TerrainWall::COLLISION_SIZE = VGet(1500,1500,1500);
 
-/*--------------6-----------------------------*/
+/*-------------------------------------------*/
 /* コンストラクタ
 /*-------------------------------------------*/
-TerrainWall::TerrainWall(int modelHandle, TerrainId terrainId, ModelType type)
-	:TerrainBase::TerrainBase(modelHandle,terrainId,type)
-{
-	// レイキャストの対象のモデルとして登録
-	RAYCAST_MANAGER.SetTargetModel(this);
-	
+TerrainWall::TerrainWall()
+	:TerrainBase::TerrainBase()
+{	
+	// モデルコンポーネントを生成
+	terrainModel = AddComponent<ModelObject>();
+	// モデルのハンドルを設定
+	terrainModel->SetHandle(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TERRAIN_WALL));
+	// モデルの種類を設定
+	terrainModel->SetObjectType(ObjectType::TERRAIN_WALL);
+
 	// ボックスコライダーを生成
 	boxCollider = COLLISION_MANAGER.AddBoxCollider();
 }
@@ -43,5 +47,5 @@ void TerrainWall::Update()
 {
 	boxCollider->center = transform.position;
 	boxCollider->size = COLLISION_SIZE;
-	boxCollider->attachedModel = this;
+	//boxCollider->attachedModel = this;
 }
