@@ -178,13 +178,13 @@ void CollisionManager::Update()
 	}
 
 	// 衝突判定：ボックスとボックス
-	collisionCheckBoxAndBox();
+	CollisionCheckBoxAndBox();
 	// 衝突判定：スフィアとスフィア
-	collisionCheckSphereAndSphere();
+	CollisionCheckSphereAndSphere();
 	// 衝突判定：ボックスとスフィア
-	collisionCheckBoxAndSphere();
+	CollisionCheckBoxAndSphere();
 	// 衝突判定：扇形とボックス
-	collisionCheckCircularSectorAndBox();
+	CollisionCheckCircularSectorAndBox();
 }
 
 /*-------------------------------------------*/
@@ -217,7 +217,7 @@ void CollisionManager::Finalize()
 /*-------------------------------------------*/
 /* 衝突判定：ボックスとボックス
 /*-------------------------------------------*/
-void CollisionManager::collisionCheckBoxAndBox()
+void CollisionManager::CollisionCheckBoxAndBox()
 {
 	// リスト内が空であれば、その時点で終了
 	if (activeBoxCollider.empty()) { return; }
@@ -275,7 +275,7 @@ void CollisionManager::collisionCheckBoxAndBox()
 				boxColliderElem2->SetCollModelInfo(tmpCollModelInfo);
 
 				// ボックス同士が衝突した際の処理にうつる
-				onCollisionBoxAndBox(boxColliderElem1, boxColliderElem2);
+				OnCollisionBoxAndBox(boxColliderElem1, boxColliderElem2);
 			}
 		}
 	}
@@ -284,7 +284,7 @@ void CollisionManager::collisionCheckBoxAndBox()
 /*-------------------------------------------*/
 /* 衝突判定：スフィアとスフィア
 /*-------------------------------------------*/
-void CollisionManager::collisionCheckSphereAndSphere()
+void CollisionManager::CollisionCheckSphereAndSphere()
 {
 	// リスト内が空であれば、その時点で終了
 	if (activeSphereCollider.empty()) { return; }
@@ -342,7 +342,7 @@ void CollisionManager::collisionCheckSphereAndSphere()
 /*-------------------------------------------*/
 /* 衝突判定：ボックスとスフィア
 /*-------------------------------------------*/
-void CollisionManager::collisionCheckBoxAndSphere()
+void CollisionManager::CollisionCheckBoxAndSphere()
 {
 	// リスト内が空であれば、その時点で終了
 	if (activeBoxCollider.empty())    { return; }		// ボックス
@@ -402,7 +402,7 @@ void CollisionManager::collisionCheckBoxAndSphere()
 /*-------------------------------------------*/
 /* 衝突判定：扇形とボックス
 /*-------------------------------------------*/
-void CollisionManager::collisionCheckCircularSectorAndBox()
+void CollisionManager::CollisionCheckCircularSectorAndBox()
 {
 	// リスト内が空であれば、その時点で終了
 	if (activeBoxCollider.empty())            { return; }
@@ -461,7 +461,7 @@ void CollisionManager::collisionCheckCircularSectorAndBox()
 /*-------------------------------------------*/
 /* ボックス同士が衝突した際の処理
 /*-------------------------------------------*/
-void CollisionManager::onCollisionBoxAndBox(BoxCollider* collider1, BoxCollider* collider2)
+void CollisionManager::OnCollisionBoxAndBox(BoxCollider* collider1, BoxCollider* collider2)
 {
 	// ボックス同士の衝突判定のみ、オブジェクト同士がめり込まないようにする。
 	// それが以下の処理である。
@@ -483,8 +483,8 @@ void CollisionManager::onCollisionBoxAndBox(BoxCollider* collider1, BoxCollider*
 	};
 
 	// それぞれのコライダーの面パラメータ
-	std::vector<BoxSurfaceParam> objectSurface1;
-	std::vector<BoxSurfaceParam> objectSurface2;
+	static std::vector<BoxSurfaceParam> objectSurface1;
+	static std::vector<BoxSurfaceParam> objectSurface2;
 
 	// vectorをリサイズする
 	// 前面、背面、左面、右面のそれぞれ４つ
@@ -538,8 +538,8 @@ void CollisionManager::onCollisionBoxAndBox(BoxCollider* collider1, BoxCollider*
 	std::sort(objectSurface2.begin(), objectSurface2.end());
 
 	// 決定した面のパラメータを抜き出す
-	BoxSurfaceParam targetSurface1 = objectSurface1.front();
-	BoxSurfaceParam targetSurface2 = objectSurface2.front();
+	static BoxSurfaceParam targetSurface1 = objectSurface1.front();
+	static BoxSurfaceParam targetSurface2 = objectSurface2.front();
 		
 	// 互いのコライダーの合計サイズの半分のサイズを算出
 	VECTOR colliderPairSizeHalf = (collider1->size + collider2->size) * 0.5f;

@@ -72,7 +72,7 @@ public:
 	void         SetLookAtPosToDistance(  const float set) { lookAtPosToDistance = set;  }
 
 protected:
-	void shakeCamera();				// カメラの揺らし処理
+	void ShakeCamera();				// カメラの揺らし処理
 
 	VECTOR lookAtPosition;			// 注視点の座標
 	float  horizontalAngle;			// カメラの水平回転角

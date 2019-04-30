@@ -164,12 +164,12 @@ void SceneResult::Update()
 	{
 	// バトル：勝利
 	case SceneResult::WINNER:
-		updateForWinner();
+		UpdateForWinner();
 		break;
 
 	// バトル：敗北
 	case SceneResult::LOSE:
-		updateForLose();
+		UpdateForLose();
 		break;
 
 	default:
@@ -233,7 +233,7 @@ void SceneResult::Update()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：勝利
 /*-------------------------------------------*/
-void SceneResult::updateForWinner()
+void SceneResult::UpdateForWinner()
 {
 
 }
@@ -241,7 +241,7 @@ void SceneResult::updateForWinner()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：敗北
 /*-------------------------------------------*/
-void SceneResult::updateForLose()
+void SceneResult::UpdateForLose()
 {
 	// プレイヤーを取得
 	CharacterBase* character = CHARACTER_MANAGER.GetCharacter(0);
@@ -267,12 +267,12 @@ void SceneResult::Draw()
 	{
 		// バトル：勝利
 	case SceneResult::WINNER:
-		drawForWinner();
+		DrawForWinner();
 		break;
 
 		// バトル：敗北
 	case SceneResult::LOSE:
-		drawForLose();
+		DrawForLose();
 		break;
 
 	default:
@@ -280,7 +280,7 @@ void SceneResult::Draw()
 	}
 
 	// 「タイトルへ戻る」画像を取得
-	int backTitleButtonSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::BACKTITLE_BUTTON);
+	static int backTitleButtonSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::BACKTITLE_BUTTON);
 	// 画像を描画
 	DrawRotaGraphF(BACKTITLE_BUTTON_SPRITE_POS.x, BACKTITLE_BUTTON_SPRITE_POS.y, 0.5f, 0, backTitleButtonSprite, TRUE);
 }
@@ -288,10 +288,10 @@ void SceneResult::Draw()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：勝利
 /*-------------------------------------------*/
-void SceneResult::drawForWinner()
+void SceneResult::DrawForWinner()
 {
 	// 勝利ロゴ画像を取得
-	int winLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::WIN_LOGO);
+	static int winLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::WIN_LOGO);
 	// ロゴ画像を描画
 	DrawRotaGraphF(LOGO_SPRITE_POS.x, LOGO_SPRITE_POS.y, 0.7f, 0, winLogoSprite, TRUE);
 }
@@ -299,10 +299,10 @@ void SceneResult::drawForWinner()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：敗北
 /*-------------------------------------------*/
-void SceneResult::drawForLose()
+void SceneResult::DrawForLose()
 {
 	// 敗北ロゴ画像を取得
-	int loseLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::LOSE_LOGO);
+	static int loseLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::LOSE_LOGO);
 	// ロゴ画像を描画
 	DrawRotaGraphF(LOGO_SPRITE_POS.x, LOGO_SPRITE_POS.y, 0.6f, 0, loseLogoSprite, TRUE);
 }

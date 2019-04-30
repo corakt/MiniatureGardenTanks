@@ -6,7 +6,7 @@
 IdGenerator::IdGenerator()
 {
 	// 乱数生成器の初期シードを設定
-	mt19937.seed(randomDevice());
+	randomGenerator.seed(randomDevice());
 }
 
 /*-------------------------------------------*/
@@ -30,7 +30,7 @@ std::uint32_t IdGenerator::Generate()
 	do
 	{
 		// IDとして扱うランダム値を生成
-		tmpId = mt19937();
+		tmpId = randomGenerator();
 
 		// 生成されたIDが重複していないか調べる
 		idIterator = std::find(idList.begin(), idList.end(), tmpId);

@@ -41,8 +41,8 @@ CharacterPlayer::~CharacterPlayer()
 /*-------------------------------------------*/
 void CharacterPlayer::Initialize()
 {
-	// キャラクター共通の初期化
-	commonInitialize();
+	// 共通のパラメータを初期化
+	InitializeCommonParameter();
 
 	// エフェクトの初期化
 	effects.reloadGauge = -1;		// リロードゲージ
@@ -58,8 +58,8 @@ void CharacterPlayer::Initialize()
 /*-------------------------------------------*/
 void CharacterPlayer::Update()
 {
-	// キャラクター共通の更新
-	commonUpdate();
+	// 共通のパラメータを更新
+	UpdateCommonParameter();
 }
 
 /*-------------------------------------------*/
@@ -67,8 +67,8 @@ void CharacterPlayer::Update()
 /*-------------------------------------------*/
 void CharacterPlayer::Draw()
 {
-	// キャラクター共通の描画
-	commonDraw();
+	// 共通のモデルを描画
+	DrawCommonModel();
 }
 
 /*-------------------------------------------*/
@@ -85,7 +85,7 @@ void CharacterPlayer::OnFiringShot()
 	sounds.shotFiring->Playing(DX_PLAYTYPE_BACK);
 
 	// エフェクトを再生
-	playEffectForFiringExplosion();		// ショット発射時の爆発
+	PlayEffectForFiringExplosion();		// ショット発射時の爆発
 }
 
 /*-------------------------------------------*/
@@ -129,13 +129,13 @@ void CharacterPlayer::ActivateSkill()
 void CharacterPlayer::DrawHpGauge()
 {
 	// スプライトハンドルを取得
-	int spriteHpGauge      = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::HPGAUGE);			// HPゲージ
-	int spriteHpGaugeFrame = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::HPGAUGE_FRAME);	// HPゲージのフレーム
+	static int spriteHpGauge      = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::HPGAUGE);			// HPゲージ
+	static int spriteHpGaugeFrame = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::HPGAUGE_FRAME);		// HPゲージのフレーム
 
 	// HPゲージ用ローカル変数
-	const float  GAUGE_STARTPERCENT = 12.5f;			// ゲージの開始地点のパーセント
-	const float  GAUGE_ENDPERCENT   = 37.5f;			// ゲージの終了地点のパーセント
-	const VECTOR GAUGEPOS_OFFSET    = VGet(190,190,0);	// ゲージ表示位置のオフセット
+	static const float  GAUGE_STARTPERCENT = 12.5f;				// ゲージの開始地点のパーセント
+	static const float  GAUGE_ENDPERCENT   = 37.5f;				// ゲージの終了地点のパーセント
+	static const VECTOR GAUGEPOS_OFFSET    = VGet(190,190,0);	// ゲージ表示位置のオフセット
 
 	// ゲージの最大長さを算出
 	const float GAUGE_LENGTH_MAX = GAUGE_ENDPERCENT - GAUGE_STARTPERCENT;
@@ -165,15 +165,15 @@ void CharacterPlayer::DrawHpGauge()
 void CharacterPlayer::DrawActiveGauge()
 {
 	// スプライトハンドルを取得
-	int spriteApGauge      = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::APGAUGE);			// APゲージ
-	int spriteApGaugeFrame = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::APGAUGE_FRAME);	// APゲージのフレーム
+	static int spriteApGauge      = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::APGAUGE);			// APゲージ
+	static int spriteApGaugeFrame = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::APGAUGE_FRAME);		// APゲージのフレーム
 
 	// HPゲージ用ローカル変数
-	const int    FILTERPARAM_ADDSUB = 4;				// フィルターパラメータの増減量
-	const int    FLASH_TIME         = 120;				// 点滅時間
-	const float  GAUGE_STARTPERCENT = 62.5f;			// ゲージの開始地点のパーセント
-	const float  GAUGE_ENDPERCENT   = 87.5f;			// ゲージの終了地点のパーセント
-	const VECTOR GAUGEPOS_OFFSET    = VGet(190,190,0);	// ゲージ表示位置のオフセット
+	static const int    FILTERPARAM_ADDSUB = 4;					// フィルターパラメータの増減量
+	static const int    FLASH_TIME         = 120;				// 点滅時間
+	static const float  GAUGE_STARTPERCENT = 62.5f;				// ゲージの開始地点のパーセント
+	static const float  GAUGE_ENDPERCENT   = 87.5f;				// ゲージの終了地点のパーセント
+	static const VECTOR GAUGEPOS_OFFSET    = VGet(190,190,0);	// ゲージ表示位置のオフセット
 
 	// ゲージの最大長さを算出
 	const float GAUGE_LENGTH_MAX = GAUGE_ENDPERCENT - GAUGE_STARTPERCENT;
@@ -235,13 +235,13 @@ void CharacterPlayer::DrawActiveGauge()
 void CharacterPlayer::DrawHitLogo()
 {
 	// スプライトハンドルを取得
-	int spriteHitLogo = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::HITLOGO);	// 攻撃ヒット時のロゴ
+	static int spriteHitLogo = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::HITLOGO);	// 攻撃ヒット時のロゴ
 
 	// ヒットロゴ描画用ローカル変数
-	const int BLENDPARAM_ADDSUB  = 15;		// ブレンドパラメータの増減量
-	const int LOGO_FADEIN_TIME   = 20;		// ロゴのフェードイン時間
-	const int LOGO_FADEOUT_TIME  = 20;		// ロゴのフェードアウト時間
-	const int LOGO_DRAW_TIME     = 20;		// ロゴの描画時間
+	static const int BLENDPARAM_ADDSUB  = 15;		// ブレンドパラメータの増減量
+	static const int LOGO_FADEIN_TIME   = 20;		// ロゴのフェードイン時間
+	static const int LOGO_FADEOUT_TIME  = 20;		// ロゴのフェードアウト時間
+	static const int LOGO_DRAW_TIME     = 20;		// ロゴの描画時間
 
 	if (isDrawHitLogo)
 	{
@@ -278,7 +278,7 @@ void CharacterPlayer::DrawHitLogo()
 void CharacterPlayer::DrawSightUi()
 {
 	// スプライトハンドルを取得
-	int spriteTargetSight = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::TARGETSIGHT);	// 照準器
+	static int spriteTargetSight = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::TARGETSIGHT);	// 照準器
 
 	// 着弾地点の座標をスクリーン座標に変換
 	VECTOR screenImpactPos = ConvWorldPosToScreenPos(impactPosition);
@@ -303,9 +303,9 @@ void CharacterPlayer::DrawSightUi()
 void CharacterPlayer::DrawLaser()
 {
 	// パラメータ
-	VECTOR POS_OFFSET   = VGet(0, -100, 0);		// 描画位置のオフセット値
-	int    BLEND_PARAM  = 255;					// ブレンド値
-	float  OPACITY_RATE = 0.5f;					// 透過値
+	static VECTOR POS_OFFSET   = VGet(0, -100, 0);		// 描画位置のオフセット値
+	static int    BLEND_PARAM  = 255;					// ブレンド値
+	static float  OPACITY_RATE = 0.5f;					// 透過値
 
 	// モデル：レーザーのトランスフォームを取得
 	Transform laserTrans = laser->GetTransform();
@@ -338,7 +338,7 @@ void CharacterPlayer::DrawLaser()
 void CharacterPlayer::DrawReloadGauge()
 {
 	// リロードゲージ再生用ローカル変数
-	const VECTOR EFFECT_SCALE = VGet(0.3f, 0.3f, 0.3f);		// エフェクトのスケール
+	static const VECTOR EFFECT_SCALE = VGet(0.3f, 0.3f, 0.3f);		// エフェクトのスケール
 
 	if (isReload)
 	{
@@ -366,7 +366,7 @@ void CharacterPlayer::DrawReloadGauge()
 void CharacterPlayer::DrawSkillCutin()
 {
 	// スプライトハンドルを取得
-	int spriteSlillCutin = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::SKILLCUTIN);	// 照準器
+	static int spriteSlillCutin = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::SKILLCUTIN);	// 照準器
 
 	if (isDrawCutin)
 	{

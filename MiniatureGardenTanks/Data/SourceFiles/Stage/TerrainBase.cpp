@@ -19,9 +19,9 @@ TerrainBase::~TerrainBase()
 }
 
 /*-------------------------------------------*/
-/* 共通の初期化
+/* 共通の初期化パラメータ
 /*-------------------------------------------*/
-void TerrainBase::commonInitialize()
+void TerrainBase::InitializeCommonParameter()
 {
 	// 各変数の初期化
 	transform.scale = VGet(3, 3, 3);	// モデルのスケール
@@ -37,7 +37,7 @@ void TerrainBase::Draw()
 	if (isActive)
 	{
 		// カメラの視界に入っているか調べるボックスのサイズを設定
-		const VECTOR VIEW_CLIP_BOX_SIZE = VGet(2300,2300,2300);
+		static const VECTOR VIEW_CLIP_BOX_SIZE = VGet(2300,2300,2300);
 
 		// 関数の"CheckCameraViewClip_Box"は、正確には2点の座標で表される
 		// 透明のボックスがカメラの視界に入っているかどうかで判定している。

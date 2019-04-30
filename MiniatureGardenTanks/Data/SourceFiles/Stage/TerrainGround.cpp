@@ -35,8 +35,8 @@ TerrainGround::~TerrainGround()
 /*-------------------------------------------*/
 void TerrainGround::Initialize()
 {
-	// 共通の初期化処理
-	commonInitialize();
+	// 共通の初期化パラメータ
+	InitializeCommonParameter();
 }
 
 /*-------------------------------------------*/

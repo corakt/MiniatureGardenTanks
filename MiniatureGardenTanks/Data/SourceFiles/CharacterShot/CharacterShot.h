@@ -44,12 +44,12 @@ public:
 
 private:
 	// エフェクトの再生
-	void playEffectForShotBoost();			// ショットの後ろから出る煙
-	void playEffectForImpactExplosion();	// ショット着弾時の爆発
+	void PlayEffectForShotBoost();			// ショットの後ろから出る煙
+	void PlayEffectForImpactExplosion();	// ショット着弾時の爆発
 
 	// 衝突コールバック関数群
-	void onCollisionCharacter(const CollModelInfo& character);		// キャラクター
-	void onCollisionTerrainWall(const CollModelInfo& terrainWall);	// ステージの壁
+	void OnCollisionCharacter(const CollModelInfo& character);		// キャラクター
+	void OnCollisionTerrainWall(const CollModelInfo& terrainWall);	// ステージの壁
 
 	ModelObject*  shotModel;				// ショットのモデル
 

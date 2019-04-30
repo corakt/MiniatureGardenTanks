@@ -20,8 +20,8 @@ public:
 	void Delete(std::uint32_t& id);
 
 private:
-	std::random_device randomDevice;	// ランダムデバイス
-	std::mt19937       mt19937;			// メルセンヌ・ツイスト乱数生成器
+	std::random_device randomDevice;		// ランダムデバイス
+	std::mt19937       randomGenerator;		// メルセンヌ・ツイスト乱数生成器
 
 	std::list<std::uint32_t> idList;	// IDのリスト
 };

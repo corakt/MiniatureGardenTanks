@@ -36,8 +36,8 @@ TerrainWall::~TerrainWall()
 /*-------------------------------------------*/
 void TerrainWall::Initialize()
 {
-	// 共通の初期化処理
-	commonInitialize();
+	// 共通の初期化パラメータ
+	InitializeCommonParameter();
 }
 
 /*-------------------------------------------*/
