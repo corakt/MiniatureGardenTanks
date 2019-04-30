@@ -33,16 +33,16 @@ public:
 
 private:
 	// シーンの状態ごとの更新処理
-	void updateForCountDown();		// カウントダウン
-	void updateForBattle();			// バトル
-	void updateForWinner();			// 勝利
-	void updateForLose();			// 敗北
+	void UpdateForCountDown();		// カウントダウン
+	void UpdateForBattle();			// バトル
+	void UpdateForWinner();			// 勝利
+	void UpdateForLose();			// 敗北
 
 	// シーンの状態ごとの描画処理
-	void drawForCountDown();		// カウントダウン
-	void drawForBattle();			// バトル
-	void drawForWinner();			// 勝利
-	void drawForLose();				// 敗北
+	void DrawForCountDown();		// カウントダウン
+	void DrawForBattle();			// バトル
+	void DrawForWinner();			// 勝利
+	void DrawForLose();				// 敗北
 
 	CharacterBase** character;			// キャラクター
 	CameraBase*     playerCamera;		// プレイヤーカメラ

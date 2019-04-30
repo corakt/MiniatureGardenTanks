@@ -103,7 +103,7 @@ void CharacterManager::DestroyCharacter()
 void CharacterManager::Initialize(const VECTOR position[],const float bodyAngle[],const COLOR_F modelColor[])
 {
 	// ループカウンター
-	int loopCounter = 0;
+	static int loopCounter = 0;
 
 	if (activeCharacter.empty() == false)
 	{

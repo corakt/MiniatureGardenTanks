@@ -78,7 +78,7 @@ void CharacterShot::Update()
 		transform.position = VAdd(transform.position, transform.velocity);	// 速度を座標に加える
 
 		// 各エフェクトの再生
-		playEffectForShotBoost();		// ショットの後ろから出る煙
+		PlayEffectForShotBoost();		// ショットの後ろから出る煙
 		
 		// モデルが衝突した際のコールバック関数を呼ぶ
 		if (boxCollider->GetCollModelInfo().empty() == false)
@@ -95,13 +95,13 @@ void CharacterShot::Update()
 					collModel->GetObjectType() == ObjectType::CHARACTER_ENEMY)
 				{
 					// コールバック関数
-					onCollisionCharacter(collModelInfoElem);
+					OnCollisionCharacter(collModelInfoElem);
 				}
 				// ステージの壁と衝突
 				else if (collModel->GetObjectType() == ObjectType::TERRAIN_WALL)
 				{
 					// コールバック関数
-					onCollisionTerrainWall(collModelInfoElem);
+					OnCollisionTerrainWall(collModelInfoElem);
 				}
 			}
 		}
@@ -122,10 +122,10 @@ void CharacterShot::Draw()
 /*-------------------------------------------*/
 /* エフェクトの再生：ショットの後ろから出る煙
 /*-------------------------------------------*/
-void CharacterShot::playEffectForShotBoost()
+void CharacterShot::PlayEffectForShotBoost()
 {
 	// エフェクトのパラメータ
-	const VECTOR BOOSTEFFECT_SCALE = VGet(0.6f, 0.6f, 0.6f);
+	static const VECTOR BOOSTEFFECT_SCALE = VGet(0.6f, 0.6f, 0.6f);
 
 	// 後ろから出る煙エフェクトを描画
 	effects.boostSmoke = PlayEffekseer3DEffect(EFFECT_MANAGER.GetHandle(ResourceEffectManager::EffectType::TANK_SHOTSMOKE));	// エフェクトハンドルをセット
@@ -137,10 +137,10 @@ void CharacterShot::playEffectForShotBoost()
 /*-------------------------------------------*/
 /* エフェクトの再生：ショット着弾時の爆発
 /*-------------------------------------------*/
-void CharacterShot::playEffectForImpactExplosion()
+void CharacterShot::PlayEffectForImpactExplosion()
 {
 	// エフェクトのパラメータ
-	const VECTOR SCALE = VGet(2, 2, 2);
+	static const VECTOR SCALE = VGet(2, 2, 2);
 
 	// 再生するエフェクトをセット
 	effects.impactExplosion = PlayEffekseer3DEffect(EFFECT_MANAGER.GetHandle(ResourceEffectManager::TANK_IMPACTEXPLOSION));
@@ -153,7 +153,7 @@ void CharacterShot::playEffectForImpactExplosion()
 /*-------------------------------------------*/
 /* 衝突コールバック関数：キャラクター
 /*-------------------------------------------*/
-void CharacterShot::onCollisionCharacter(const CollModelInfo& character)
+void CharacterShot::OnCollisionCharacter(const CollModelInfo& character)
 {
 	// ショットに衝突したキャラクターが
 	// 撃ったキャラクターと同一であれば、無視してそのまま関数を抜ける
@@ -174,10 +174,10 @@ void CharacterShot::onCollisionCharacter(const CollModelInfo& character)
 /*-------------------------------------------*/
 /* 衝突コールバック関数：ステージの壁
 /*-------------------------------------------*/
-void CharacterShot::onCollisionTerrainWall(const CollModelInfo& terrainWall)
+void CharacterShot::OnCollisionTerrainWall(const CollModelInfo& terrainWall)
 {
 	// 壁の着弾音を取得
-	int shotImpactSound = SOUND_MANAGER.GetHandle(ResourceSoundManager::SoundType::SE_TANK_SHOTIMPACT);
+	static int shotImpactSound = SOUND_MANAGER.GetHandle(ResourceSoundManager::SoundType::SE_TANK_SHOTIMPACT);
 	// 再生位置をセット
 	SetNextPlay3DPositionSoundMem(transform.position, shotImpactSound);
 	// 可聴範囲をセット
@@ -188,7 +188,7 @@ void CharacterShot::onCollisionTerrainWall(const CollModelInfo& terrainWall)
 	PlaySoundMem(shotImpactSound,DX_PLAYTYPE_BACK);
 
 	// ショット着弾時の爆発エフェクトを再生
-	playEffectForImpactExplosion();
+	PlayEffectForImpactExplosion();
 
 	// 稼働フラグをfalseにする
 	isActive = false;

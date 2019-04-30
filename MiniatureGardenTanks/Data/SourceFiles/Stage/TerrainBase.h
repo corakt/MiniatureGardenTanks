@@ -48,7 +48,7 @@ public:
 	void             SetId(  const TerrainId set) { id = set;  }
 
 protected:
-	void commonInitialize();		// 継承クラス共通の初期化
+	void InitializeCommonParameter();		// 共通の初期化パラメータ
 	
 	ModelObject* terrainModel;		// 地形モデル
 	TerrainId    id;				// 地形ID

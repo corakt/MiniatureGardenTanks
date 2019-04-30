@@ -193,14 +193,14 @@ void StageManager::SetTerrainPosition()
 			TerrainId terrainId = terrainGroundElem->GetId();
 
 			// 配置する座標を計算
-			VECTOR groundPos = VGet(terrainId.x * TERRAIN_SIZE.x, 0, terrainId.z * TERRAIN_SIZE.z);
+			//VECTOR groundPos = VGet(terrainId.x * TERRAIN_SIZE.x, 0, terrainId.z * TERRAIN_SIZE.z);
 
 			// トランスフォームを取得
 			Transform groundTrans = terrainGroundElem->GetTransform();
 			// 計算済みの座標を代入
-			groundTrans.position = groundPos;
+			//groundTrans.position = groundPos;
 			// トランスフォームをセット
-			terrainGroundElem->SetTransform(groundTrans);
+			//terrainGroundElem->SetTransform(groundTrans);
 		}
 	}
 

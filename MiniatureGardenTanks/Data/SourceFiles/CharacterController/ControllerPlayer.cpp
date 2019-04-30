@@ -29,8 +29,8 @@ ControllerPlayer::~ControllerPlayer()
 /*-------------------------------------------*/
 void ControllerPlayer::Initialize()
 {
-	// キャラクターの制御共通の初期化
-	commonInitialize();
+	// 共通のパラメータを初期化
+	InitializeCommonParameter();
 }
 
 /*-------------------------------------------*/
@@ -68,7 +68,7 @@ void ControllerPlayer::Update()
 	if (VSquareSize(moveInputDir) != 0) { isMoveInput = true;  }
 	else                                { isMoveInput = false; }
 	// 関数から移動処理を行う
-	move(isMoveInput);
+	Move(isMoveInput);
 
 	
 	/*-------------------------------------------*/
@@ -87,13 +87,13 @@ void ControllerPlayer::Update()
 	// 回転行列とパッドの入力方向から移動方向を決める
 	VECTOR moveDirection = VTransform(moveInputDir, rotationY);
 	// 車体を回転させる
-	rotationBody(moveDirection, isMoveInput);
+	RotationBody(moveDirection, isMoveInput);
 
 
 	/*-------------------------------------------*/
 	/* 砲塔の回転
 	/*-------------------------------------------*/
-	rotationTurret(cameraTrans.direction);
+	RotationTurret(cameraTrans.direction);
 
 
 	/*-------------------------------------------*/
@@ -117,15 +117,15 @@ void ControllerPlayer::Update()
 			controlCharacter->OnFiringShot();
 
 			// カメラを揺らす処理
-			const float SHAKE_WIDTH       = 50.0f;		// 揺れ幅
-			const float SHAKE_TIME        = 0.2f;		// 揺れ時間
-			const float SHAKE_ANGLE_SPEED = 100.0f;		// 揺れ速度
+			static const float SHAKE_WIDTH       = 50.0f;		// 揺れ幅
+			static const float SHAKE_TIME        = 0.2f;		// 揺れ時間
+			static const float SHAKE_ANGLE_SPEED = 100.0f;		// 揺れ速度
 			// カメラを揺らす
 			playerCamera->CallingToShakeCamera(SHAKE_WIDTH, SHAKE_TIME, SHAKE_ANGLE_SPEED);
 
 			// コントローラーの振動処理
-			const int VIVE_POWER = 1000;				// 振動の強さ
-			const int VIVE_TIME  = 100;					// 振動の時間
+			static const int VIVE_POWER = 1000;					// 振動の強さ
+			static const int VIVE_TIME  = 100;					// 振動の時間
 			// 振動を開始する
 			INPUT.StartVibration(VIVE_POWER, VIVE_TIME);
 
@@ -147,7 +147,7 @@ void ControllerPlayer::Update()
 	// フラグがたっている場合は、反動の処理にうつる
 	if (isReaction)
 	{
-		firingReaction();
+		FiringReaction();
 	}
 
 	/*-------------------------------------------*/
