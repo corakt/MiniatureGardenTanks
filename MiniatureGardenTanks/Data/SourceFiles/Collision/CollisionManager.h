@@ -40,13 +40,13 @@ public:
 
 private:
 	// 衝突判定関数群
-	void collisionCheckBoxAndBox();				// ボックスとボックス
-	void collisionCheckSphereAndSphere();		// スフィアとスフィア
-	void collisionCheckBoxAndSphere();			// ボックスとスフィア
-	void collisionCheckCircularSectorAndBox();	// 扇形とボックス
+	void CollisionCheckBoxAndBox();				// ボックスとボックス
+	void CollisionCheckSphereAndSphere();		// スフィアとスフィア
+	void CollisionCheckBoxAndSphere();			// ボックスとスフィア
+	void CollisionCheckCircularSectorAndBox();	// 扇形とボックス
 
 	// ボックス同士が衝突した際の処理
-	void onCollisionBoxAndBox(BoxCollider* collider1,BoxCollider* collider2);
+	void OnCollisionBoxAndBox(BoxCollider* collider1,BoxCollider* collider2);
 
 	BoxCollider**            boxCollider;				// ボックスコライダー
 	SphereCollider**         sphereCollider;			// スフィアコライダー

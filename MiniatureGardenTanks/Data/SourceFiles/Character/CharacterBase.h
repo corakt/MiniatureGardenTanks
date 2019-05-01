@@ -51,7 +51,7 @@ struct CharacterCounters
 /*-------------------------------------------*/
 /* キャラクター / 基底クラス
 /*-------------------------------------------*/
-class CharacterBase
+class CharacterBase : public GameObject
 {
 public:
 	// キャラクターの種類
@@ -163,7 +163,7 @@ public:
 	void SetImpactPos(const VECTOR set) { impactPosition = set; }
 
 	// キャラクターの種類
-	const CharacterType& GetType() const { return type; }
+	const CharacterType& GetObjectType() const { return type; }
 
 	// キャラクターの状態
 	const State& GetState() const { return state; }
@@ -251,30 +251,20 @@ public:
 
 protected:
 	// 継承クラス共通の処理を行う関数群
-	void commonInitialize();						// 共通の初期化処理
-	void commonUpdate();							// 共通の更新処理
-	void commonDraw();								// 共通の描画処理
-
-	void calculationPartsDirection();				// 各部品の向きベクトルを算出
-	void calculationTurretTipPos();					// 砲塔の先端の座標を算出
-	void calculationImpactPosition();				// ショットの着弾地点の算出
-	void controlInvincibleState();					// 無敵状態の制御
-	void updateMoveState();							// 移動の状態を更新
-	void updateRaycastParameter();					// レイキャストのパラメータを更新
-	void updateColliderParameter();					// コライダーのパラメータを更新
-	void updateSoundPosition();						// サウンドの再生位置を更新
-	void controlEngineSound();						// エンジン音の制御
+	void InitializeCommonParameter();		// 共通のパラメータを初期化
+	void UpdateCommonParameter();			// 共通のパラメータを更新
+	void DrawCommonModel();					// 共通のモデルを描画
 
 	// 各エフェクトの再生
-	void playEffectForDamage();						// ダメージ
-	void playEffectForBrokenExplosion();			// 戦車の破壊
-	void playEffectForBrokenBlackSmoke();			// 破壊後の黒煙
-	void playEffectForFiringExplosion();			// 砲撃時の爆発
-	void playEffectForExhaustGas();					// 排気ガス
-	void playEffectforMoveSandSmoke();				// 移動時の土煙
+	void PlayEffectForDamage();						// ダメージ
+	void PlayEffectForBrokenExplosion();			// 戦車の破壊
+	void PlayEffectForBrokenBlackSmoke();			// 破壊後の黒煙
+	void PlayEffectForFiringExplosion();			// 砲撃時の爆発
+	void PlayEffectForExhaustGas();					// 排気ガス
+	void PlayEffectforMoveSandSmoke();				// 移動時の土煙
 
 	// 衝突コールバック関数
-	void onCollisionShot(const CollModelInfo& shot);	// ショットと衝突
+	void OnCollisionShot(const CollModelInfo& shot);// ショットと衝突
 
 	UINT  id;										// キャラクターID
 	int   hitPoint;									// キャラクターのヒットポイント
@@ -329,4 +319,20 @@ protected:
 	static const float  REACTION_FORCE_MAX;			// ショット発射時の反動力
 	static const float  REACTION_ATTENUATION;		// 反動の減衰率
 	static const float  TURRET_RAYCAST_DISTANCE;	// 砲塔のレイキャストの距離
+
+private:
+	void CalculationPartsDirection();				// 各部品の向きベクトルを算出
+	void CalculationTurretTipPos();					// 砲塔の先端の座標を算出
+	void CalculationImpactPosition();				// ショットの着弾地点の算出
+	void UpdateInvincibleState();					// 無敵状態を更新
+	void UpdateCharacterState();					// キャラクターの状態を更新
+	void UpdateReloadState();						// リロードの状態を更新
+	void UpdateMoveState();							// 移動の状態を更新
+	void UpdateFiringShotNum();						// 発射するショットの数を更新
+	void UpdateActivePoint();						// アクティブポイントを更新
+	void UpdateRaycastParameter();					// レイキャストのパラメータを更新
+	void UpdateColliderParameter();					// コライダーのパラメータを更新
+	void UpdateSoundPosition();						// サウンドの再生位置を更新
+	void UpdateEngineSound();						// エンジン音を更新
+	void CallingCollisionCallback();				// 衝突時のコールバック関数を呼ぶ
 };

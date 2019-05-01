@@ -33,11 +33,11 @@ public:
 /*-------------------------------------------*/
 /* 地形 / 基底クラス
 /*-------------------------------------------*/
-class TerrainBase : public ModelObject
+class TerrainBase : public GameObject
 {
 public:
-			 TerrainBase(int modelHandle, TerrainId terrainId,ModelType type);	// コンストラクタ
-	virtual ~TerrainBase();														// デストラクタ
+			 TerrainBase();				// コンストラクタ
+	virtual ~TerrainBase();				// デストラクタ
 
 	virtual void Initialize() = 0;		// 初期化
 	virtual void Update()     = 0;		// 更新
@@ -48,6 +48,8 @@ public:
 	void             SetId(  const TerrainId set) { id = set;  }
 
 protected:
-	void commonInitialize();			// 継承クラス共通の初期化
-	TerrainId        id;				// 地形ID
+	void InitializeCommonParameter();		// 共通の初期化パラメータ
+	
+	ModelObject* terrainModel;		// 地形モデル
+	TerrainId    id;				// 地形ID
 };

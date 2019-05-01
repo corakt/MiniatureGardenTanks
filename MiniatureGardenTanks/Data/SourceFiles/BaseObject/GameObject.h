@@ -1,17 +1,31 @@
 ﻿#pragma once
 #include "../BaseObject/Transform.h"
+#include "../Others/Objecttype.h"
 #include <DxLib.h>
 #include <string>
 
 /*-------------------------------------------*/
-/* オブジェクトクラス
+/* ゲームオブジェクトクラス
 /* （ハンドルを持たない基本のオブジェクト）
 /*-------------------------------------------*/
-class Object
+class GameObject
 {
 public:
-			 Object();		// コンストラクタ
-	virtual ~Object();		// デストラクタ
+			 GameObject();		// コンストラクタ
+	virtual ~GameObject();		// デストラクタ
+
+	// コンポーネントの追加
+	template <class T>
+	T* AddComponent()
+	{
+		// コンポーネントを生成して、ポインタを返す
+		// 生成元の親オブジェクトを渡す
+		return new T(this);
+	}
+
+	// タグ
+	const ObjectType& GetObjectType() const                 { return objectType; }
+	void              SetObjectType(  const ObjectType set) { objectType = set;  }
 
 	// オブジェクトID
 	const std::uint32_t& GetObjectId() const { return objectId; }
@@ -26,6 +40,7 @@ public:
 
 protected:
 	Transform     transform;	// トランスフォーム
+	ObjectType    objectType;	// オブジェクトの種類
 	std::uint32_t objectId;		// オブジェクトを識別するID
 	bool          isActive;		// 機能しているかどうか
 };

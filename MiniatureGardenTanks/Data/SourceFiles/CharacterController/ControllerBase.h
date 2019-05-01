@@ -18,12 +18,12 @@ public:
 	virtual void Update()     = 0;						// 更新
 
 protected:
-	void commonInitialize();							// 共通の初期化
+	void InitializeCommonParameter();					// 共通のパラメータを初期化
 
-	void move(bool isInput);							// 移動
-	void rotationBody(VECTOR moveDir,bool isInput);		// 車体の回転
-	void rotationTurret(VECTOR turretDir);				// 砲塔の回転
-	void firingReaction();								// ショット発射時の反動
+	void Move(bool isInput);							// 移動
+	void RotationBody(VECTOR moveDir,bool isInput);		// 車体の回転
+	void RotationTurret(VECTOR turretDir);				// 砲塔の回転
+	void FiringReaction();								// ショット発射時の反動
 
 	float easingTime;						// イージングの進行度
 	float currentSpeed;						// 現在の移動スピード

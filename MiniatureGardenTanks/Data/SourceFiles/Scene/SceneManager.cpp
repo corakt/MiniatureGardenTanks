@@ -62,7 +62,7 @@ void SceneManager::Draw()
 void SceneManager::UpdateEffekseer()
 {
 	// Effekseer用のダミー画像を取得
-	int dummySprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::EFFEKSEER_DUMMY);
+	static int dummySprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::EFFEKSEER_DUMMY);
 	// ダミー画像を描画
 	DrawGraph(0, 0, dummySprite, TRUE);
 	// Effekseerにより再生中のエフェクトを更新する

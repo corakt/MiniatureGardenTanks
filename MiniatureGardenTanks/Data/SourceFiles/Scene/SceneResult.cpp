@@ -2,7 +2,7 @@
 #include "../Stage/StageManager.h"
 #include "../ResourcesManager/OtherResources.h"
 #include "../Character/CharacterManager.h"
-#include "../BaseObject/ObjectIdManager.h"
+#include "../BaseObject/IdGenerator.h"
 #include "../Others/Input.h"
 #include "../Camera/CameraBase.h"
 #include "../ResourcesManager/ResourceSpriteManager.h"
@@ -11,12 +11,12 @@
 #include "../Others/HelperFunction.h"
 #include "../Collision/CollisionManager.h"
 
-const CharacterBase::CharacterType SceneResult::CHARACTER_TYPE   = CharacterBase::CharacterType::PLAYER;	// キャラクターの種類
-const VECTOR SceneResult::CHARACTER_POSITION[]                   = { VGet(15000,100,15000) };				// キャラクターの位置
-const float SceneResult::CHARACTER_BODYANGLE[]                   = {DX_PI_F};								// キャラクターの車体角度
-const COLOR_F SceneResult::CHARACTER_MODELCOLOR[]                = { GetColorF(1,0.2f,0,1) };				// キャラクターのモデルの色
+const CharacterBase::CharacterType SceneResult::CHARACTER_TYPE = CharacterBase::CharacterType::PLAYER;		// キャラクターの種類
+const VECTOR SceneResult::CHARACTER_POSITION[]                 = { VGet(15000,100,15000) };					// キャラクターの位置
+const float SceneResult::CHARACTER_BODYANGLE[]                 = {DX_PI_F};									// キャラクターの車体角度
+const COLOR_F SceneResult::CHARACTER_MODELCOLOR[]              = { GetColorF(1,0.2f,0,1) };					// キャラクターのモデルの色
 
-const VECTOR SceneResult::CAMERA_POSITION = VGet(14100,500,14100);		// カメラの位置
+const VECTOR SceneResult::CAMERA_POSITION = VGet(14100,500,14100);				// カメラの位置
 
 const VECTOR SceneResult::LOGO_SPRITE_POS = VGet(400, 300, 0);					// ロゴの表示位置
 const VECTOR SceneResult::BACKTITLE_BUTTON_SPRITE_POS = VGet(400, 850, 0);		// 「タイトルへ戻る」の表示位置
@@ -113,9 +113,6 @@ void SceneResult::Initialize()
 	// 衝突判定の管理クラスの初期化処理
 	COLLISION_MANAGER.Initialize();
 
-	// オブジェクトIDの管理クラスの初期化
-	OBJECTID_MANAGER.Initialize();
-
 	// キャラクターの初期化処理
 	CHARACTER_MANAGER.Initialize(CHARACTER_POSITION, CHARACTER_BODYANGLE, CHARACTER_MODELCOLOR);
 	// キャラクターで再生されているエンジンサウンドは停止する
@@ -167,12 +164,12 @@ void SceneResult::Update()
 	{
 	// バトル：勝利
 	case SceneResult::WINNER:
-		updateForWinner();
+		UpdateForWinner();
 		break;
 
 	// バトル：敗北
 	case SceneResult::LOSE:
-		updateForLose();
+		UpdateForLose();
 		break;
 
 	default:
@@ -236,7 +233,7 @@ void SceneResult::Update()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：勝利
 /*-------------------------------------------*/
-void SceneResult::updateForWinner()
+void SceneResult::UpdateForWinner()
 {
 
 }
@@ -244,7 +241,7 @@ void SceneResult::updateForWinner()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：敗北
 /*-------------------------------------------*/
-void SceneResult::updateForLose()
+void SceneResult::UpdateForLose()
 {
 	// プレイヤーを取得
 	CharacterBase* character = CHARACTER_MANAGER.GetCharacter(0);
@@ -270,12 +267,12 @@ void SceneResult::Draw()
 	{
 		// バトル：勝利
 	case SceneResult::WINNER:
-		drawForWinner();
+		DrawForWinner();
 		break;
 
 		// バトル：敗北
 	case SceneResult::LOSE:
-		drawForLose();
+		DrawForLose();
 		break;
 
 	default:
@@ -283,7 +280,7 @@ void SceneResult::Draw()
 	}
 
 	// 「タイトルへ戻る」画像を取得
-	int backTitleButtonSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::BACKTITLE_BUTTON);
+	static int backTitleButtonSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::BACKTITLE_BUTTON);
 	// 画像を描画
 	DrawRotaGraphF(BACKTITLE_BUTTON_SPRITE_POS.x, BACKTITLE_BUTTON_SPRITE_POS.y, 0.5f, 0, backTitleButtonSprite, TRUE);
 }
@@ -291,10 +288,10 @@ void SceneResult::Draw()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：勝利
 /*-------------------------------------------*/
-void SceneResult::drawForWinner()
+void SceneResult::DrawForWinner()
 {
 	// 勝利ロゴ画像を取得
-	int winLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::WIN_LOGO);
+	static int winLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::WIN_LOGO);
 	// ロゴ画像を描画
 	DrawRotaGraphF(LOGO_SPRITE_POS.x, LOGO_SPRITE_POS.y, 0.7f, 0, winLogoSprite, TRUE);
 }
@@ -302,10 +299,10 @@ void SceneResult::drawForWinner()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：敗北
 /*-------------------------------------------*/
-void SceneResult::drawForLose()
+void SceneResult::DrawForLose()
 {
 	// 敗北ロゴ画像を取得
-	int loseLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::LOSE_LOGO);
+	static int loseLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::LOSE_LOGO);
 	// ロゴ画像を描画
 	DrawRotaGraphF(LOGO_SPRITE_POS.x, LOGO_SPRITE_POS.y, 0.6f, 0, loseLogoSprite, TRUE);
 }

@@ -8,7 +8,7 @@
 #include "../CharacterShot/ShotManager.h"
 #include "../Raycast/RaycastManager.h"
 #include "../Collision/CollisionManager.h"
-#include "../BaseObject/ObjectIdManager.h"
+#include "../BaseObject/IdGenerator.h"
 #include "../ResourcesManager/ResourceModelManager.h"
 #include "../ResourcesManager/ResourceSpriteManager.h"
 #include "../ResourcesManager/ResourceSoundManager.h"
@@ -199,9 +199,6 @@ void SceneMain::Initialize()
 	// 衝突判定の管理クラスの初期化処理
 	COLLISION_MANAGER.Initialize();
 
-	// オブジェクトIDの管理クラスの初期化
-	OBJECTID_MANAGER.Initialize();
-
 	// キャラクターの初期化処理
 	CHARACTER_MANAGER.Initialize(CHARACTER_POSITION, CHARACTER_BODYANGLE, CHARACTER_MODELCOLOR);
 	for (int i = 0; i < CHARACTER_NUM; i++)
@@ -277,22 +274,22 @@ void SceneMain::Update()
 	{
 	// シーンの状態：カウントダウン
 	case State::COUNTDOWN:
-		updateForCountDown();
+		UpdateForCountDown();
 		break;
 
 	// シーンの状態：バトル
 	case State::BATTLE:
-		updateForBattle();
+		UpdateForBattle();
 		break;
 
 	// シーンの状態：勝利
 	case State::WINNER:
-		updateForWinner();
+		UpdateForWinner();
 		break;
 
 	// シーンの状態：敗北
 	case State::LOSE:
-		updateForLose();
+		UpdateForLose();
 		break;
 
 	default:
@@ -303,7 +300,7 @@ void SceneMain::Update()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：カウントダウン
 /*-------------------------------------------*/
-void SceneMain::updateForCountDown()
+void SceneMain::UpdateForCountDown()
 {
 	if (countDownCamera != NULL)
 	{
@@ -335,7 +332,7 @@ void SceneMain::updateForCountDown()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：バトル
 /*-------------------------------------------*/
-void SceneMain::updateForBattle()
+void SceneMain::UpdateForBattle()
 {
 	// ショットの更新処理
 	SHOT_MANAGER.Update();
@@ -403,7 +400,7 @@ void SceneMain::updateForBattle()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：勝利
 /*-------------------------------------------*/
-void SceneMain::updateForWinner()
+void SceneMain::UpdateForWinner()
 {
 	// 遷移カウントを加算
 	transitionCount++;
@@ -426,7 +423,7 @@ void SceneMain::updateForWinner()
 /*-------------------------------------------*/
 /* シーンの状態ごとの更新処理：敗北
 /*-------------------------------------------*/
-void SceneMain::updateForLose()
+void SceneMain::UpdateForLose()
 {
 	if (loseCamera != NULL)
 	{
@@ -489,22 +486,22 @@ void SceneMain::Draw()
 	{
 		// シーンの状態：カウントダウン
 	case State::COUNTDOWN:
-		drawForCountDown();
+		DrawForCountDown();
 		break;
 
 		// シーンの状態：バトル
 	case State::BATTLE:
-		drawForBattle();
+		DrawForBattle();
 		break;
 
 		// シーンの状態：勝利
 	case State::WINNER:
-		drawForWinner();
+		DrawForWinner();
 		break;
 
 		// シーンの状態：敗北
 	case State::LOSE:
-		drawForLose();
+		DrawForLose();
 		break;
 
 	default:
@@ -515,10 +512,10 @@ void SceneMain::Draw()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：カウントダウン
 /*-------------------------------------------*/
-void SceneMain::drawForCountDown()
+void SceneMain::DrawForCountDown()
 {
 	// カウントダウンで扱うスプライトハンドルを取得
-	int countDownSprites[] =
+	static int countDownSprites[] =
 	{
 		SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::COUNTDOWN_START),		// スタート
 		SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::COUNTDOWN_NUMBER_1),	// １
@@ -535,7 +532,7 @@ void SceneMain::drawForCountDown()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：バトル
 /*-------------------------------------------*/
-void SceneMain::drawForBattle()
+void SceneMain::DrawForBattle()
 {
 	// キャラクターのUIの描画処理
 	CHARACTER_MANAGER.DrawUi();
@@ -544,7 +541,7 @@ void SceneMain::drawForBattle()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：勝利
 /*-------------------------------------------*/
-void SceneMain::drawForWinner()
+void SceneMain::DrawForWinner()
 {
 
 }
@@ -552,7 +549,7 @@ void SceneMain::drawForWinner()
 /*-------------------------------------------*/
 /* シーンの状態ごとの描画処理：敗北
 /*-------------------------------------------*/
-void SceneMain::drawForLose()
+void SceneMain::DrawForLose()
 {
 
 }

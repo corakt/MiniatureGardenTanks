@@ -9,8 +9,8 @@ class BoxCollider;
 class TerrainWall final : public TerrainBase
 {
 public:
-	         TerrainWall(int modelHandle, TerrainId terrainId,ModelType type);		// コンストラクタ
-	virtual ~TerrainWall();															// デストラクタ
+	         TerrainWall();					// コンストラクタ
+	virtual ~TerrainWall();					// デストラクタ
 
 	void     Initialize()override;			// 初期化
 	void     Update()    override;			// 更新

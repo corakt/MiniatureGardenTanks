@@ -28,9 +28,9 @@ ControllerBase::~ControllerBase()
 }
 
 /*-------------------------------------------*/
-/* 共通の初期化
+/* 共通のパラメータを初期化
 /*-------------------------------------------*/
-void ControllerBase::commonInitialize()
+void ControllerBase::InitializeCommonParameter()
 {
 	// 各変数の初期化
 	easingTime   = 0;		// イージングの進行度
@@ -40,7 +40,7 @@ void ControllerBase::commonInitialize()
 /*-------------------------------------------*/
 /* 移動
 /*-------------------------------------------*/
-void ControllerBase::move(bool isInput)
+void ControllerBase::Move(bool isInput)
 {
 	// キャラクターから移動パラメータを取得
 	const float  MOVING_SPEED_MAX  = controlCharacter->GetMovingSpeedMax();		// 移動の最高スピード
@@ -98,7 +98,7 @@ void ControllerBase::move(bool isInput)
 /*-------------------------------------------*/
 /* 車体の回転
 /*-------------------------------------------*/
-void ControllerBase::rotationBody(VECTOR moveDir,bool isInput)
+void ControllerBase::RotationBody(VECTOR moveDir,bool isInput)
 {
 	if (isInput)
 	{
@@ -112,7 +112,7 @@ void ControllerBase::rotationBody(VECTOR moveDir,bool isInput)
 /*-------------------------------------------*/
 /* 砲塔の回転
 /*-------------------------------------------*/
-void ControllerBase::rotationTurret(VECTOR turretDir)
+void ControllerBase::RotationTurret(VECTOR turretDir)
 {
 	// 向きを角度に変換する
 	float rotationY = atan2f(turretDir.x, turretDir.z);
@@ -123,7 +123,7 @@ void ControllerBase::rotationTurret(VECTOR turretDir)
 /*-------------------------------------------*/
 /* ショット発射時の反動
 /*-------------------------------------------*/
-void ControllerBase::firingReaction()
+void ControllerBase::FiringReaction()
 {
 	// 現在の反動時の状態を表すステートを取得
 	CharacterBase::FiringReactionState reactionState = controlCharacter->GetReactionState();

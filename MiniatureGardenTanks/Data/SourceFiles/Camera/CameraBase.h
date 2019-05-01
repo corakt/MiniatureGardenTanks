@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../BaseObject/Object.h"
+#include "../BaseObject/GameObject.h"
 #include <DxLib.h>
 #include <list>
 
@@ -28,7 +28,7 @@ struct CameraMoveParameter
 /*-------------------------------------------*/
 /* カメラ / 基底クラス
 /*-------------------------------------------*/
-class CameraBase : public Object
+class CameraBase : public GameObject
 {
 public:
 	         CameraBase();		// コンストラクタ
@@ -72,7 +72,7 @@ public:
 	void         SetLookAtPosToDistance(  const float set) { lookAtPosToDistance = set;  }
 
 protected:
-	void shakeCamera();				// カメラの揺らし処理
+	void ShakeCamera();				// カメラの揺らし処理
 
 	VECTOR lookAtPosition;			// 注視点の座標
 	float  horizontalAngle;			// カメラの水平回転角

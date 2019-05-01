@@ -56,9 +56,15 @@ CharacterBase::CharacterBase(UINT id, CharacterType type)
 	sounds.engineDecel  = NULL;		// エンジン：減速
 	sounds.crawler      = NULL;		// 履帯音
 
-	// キャラクターの各部品を生成
-	tank[PartsType::BODY]   = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_BODY), ModelType::TANK_BODY);		// 車体
-	tank[PartsType::TURRET] = new ModelObject(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_TURRET), ModelType::TANK_TURRET);	// 砲塔
+	// キャラクターの各部品を表すモデルコンポーネントを生成
+	tank[PartsType::BODY]   = AddComponent<ModelObject>();
+	tank[PartsType::TURRET] = AddComponent<ModelObject>();
+	// モデルをセットする
+	tank[PartsType::BODY]->SetHandle(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_BODY));
+	tank[PartsType::TURRET]->SetHandle(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_TURRET));
+	// モデルコンポーネントの種類を設定
+	tank[PartsType::BODY]->SetObjectType(ObjectType::CHARACTER_TANKBODY);
+	tank[PartsType::TURRET]->SetObjectType(ObjectType::CHARACTER_TANKTURRET);
 
 	// 車体部分のモデルをレイキャストの対象のモデルとして登録
 	RAYCAST_MANAGER.SetTargetModel(tank[PartsType::BODY]);
@@ -116,16 +122,13 @@ CharacterBase::~CharacterBase()
 /*-------------------------------------------*/
 void CharacterBase::CalculationTurretRelativePosition()
 {
-	// 砲塔の位置は車体の相対位置になる。
+	// 各部品の相対位置
+	static const VECTOR BODY_RELATIVE_POS   = VGet(0, 0, 0);
+	static const VECTOR TURRET_RELATIVE_POS = VGet(0, 200, 0);
 
-	// 砲塔のオフセット値
-	VECTOR turretPosOffset = VGet(0, 200,0);
-
-	// 車体の位置にオフセット値を加えたものを相対位置にする
-	VECTOR turretRelativePos = bodyTransform.position + turretPosOffset;
-
-	// トランスフォームに算出した相対位置をセット
-	turretTransform.position = turretRelativePos;
+	// 相対位置から部品の位置を算出
+	bodyTransform.position   = transform.position + BODY_RELATIVE_POS;
+	turretTransform.position = transform.position + TURRET_RELATIVE_POS;
 }
 
 /*-------------------------------------------*/
@@ -149,9 +152,9 @@ void CharacterBase::AddActivePoint(int addNum)
 }
 
 /*-------------------------------------------*/
-/* 共通の初期化処理
+/* 共通のパラメータを初期化
 /*-------------------------------------------*/
-void CharacterBase::commonInitialize()
+void CharacterBase::InitializeCommonParameter()
 {
 	// 各変数の初期化
 	hitPoint             = HITPOINT_MAX;						// キャラクターのヒットポイント
@@ -234,160 +237,56 @@ void CharacterBase::commonInitialize()
 }
 
 /*-------------------------------------------*/
-/* 共通の更新処理
+/* 共通のパラメータを更新
 /*-------------------------------------------*/
-void CharacterBase::commonUpdate()
+void CharacterBase::UpdateCommonParameter()
 {
 	// トランスフォームを取得
 	bodyTransform   = tank[PartsType::BODY]->GetTransform();		// 車体
 	turretTransform = tank[PartsType::TURRET]->GetTransform();		// 砲塔
 
-	// 砲塔の相対位置を算出
-	CalculationTurretRelativePosition();
-	// 各部品の向きベクトルを算出
-	calculationPartsDirection();
-	// 砲塔の先端の座標を算出
-	calculationTurretTipPos();
-	// ショットの着弾地点を算出
-	calculationImpactPosition();
-	// 無敵状態の制御
-	controlInvincibleState();
-	// 移動の状態を更新
-	updateMoveState();
-	// レイキャストのパラメータを更新
-	updateRaycastParameter();
-	// コライダーのパラメータを更新
-	updateColliderParameter();
-	// サウンドの再生位置を更新
-	updateSoundPosition();
-
-	// エンジンサウンドの再生フラグがtrueだった場合のみ、再生する
-	if (isEngineSoundPlaying)
-	{
-		// HPが残っている場合のみ、エンジン音を再生する
-		if (hitPoint > 0)
-		{
-			// エンジン音の制御を行う
-			controlEngineSound();
-		}
-		else
-		{
-			// 再生中のエンジン音を停止する
-			StopEngineSound();
-		}
-	}
-
-	// 戦車が破壊されていなければ、以下の処理を行う
-	if (state != State::BROKEN)
-	{
-		// スキル発動時の発射するショットの数を設定
-		if (state == State::SKILL_ACTIVE)
-		{
-			// スキル発動時
-			firingShotNum = SKILL_FIRINGSHOT_NUM;
-		}
-		else
-		{
-			// スキル未発動時は１発のみ
-			firingShotNum = 1;
-		}
-
-		// ショットのリロード処理
-		if (isReload)
-		{
-			// 現在のリロード時間を表すカウントを加算していく
-			currentReloadTime++;
-
-			// リロード完了手前で、装填音を再生
-			if (currentReloadTime == RELOAD_TIME-40)
-			{
-				sounds.shotReload->Playing(DX_PLAYTYPE_BACK);
-			}
-
-			// 現在のリロード時間が指定のリロード時間を超えたら、
-			// リロードフラグを倒す
-			if (currentReloadTime >= RELOAD_TIME)
-			{
-				isReload = false;
-				// カウントを０に初期化
-				currentReloadTime = 0;
-			}
-		}
-
-		// 各エフェクトを再生
-		playEffectForExhaustGas();			// 排気ガス
-		playEffectforMoveSandSmoke();		// 移動中の土煙
-		playEffectForBrokenBlackSmoke();	// 破壊後の黒煙
-
-		// 移動中の処理
-		if (moveState != MoveState::STOP)
-		{
-			// アクティブポイントを加算していく
-			AddActivePoint(1);
-		}
-	}
-	// 戦車が破壊された場合は、以下の処理を行う
-	else
-	{
-		// 破壊後の黒煙のエフェクトを再生
-		playEffectForBrokenBlackSmoke();
-		// キャラクターの制御フラグをfalseに変更
-		isControling = false;
-	}
-
-	// スキルモード発動中の処理
-	if (state == State::SKILL_ACTIVE)
-	{
-		// スキル発動中はアクティブポイントを減らしていく
-		activePoint -= 7;
-
-		// アクティブポイントが０を下回らないようにする
-		if (activePoint <= 0)
-		{
-			// 通常の状態に変更する
-			state = State::NORMAL;
-			activePoint = 0;
-		}
-	}
-	
-	// アクティブポイントが満タンになったら、状態を表すステートを変更する
-	if (activePoint >= ACTIVEPOINT_MAX) { state = State::ACTIVEGAUGE_FULL; }
-	// アクティブポイントが最大値を上回らないようにする
-	if (activePoint > ACTIVEPOINT_MAX)
-	{
-		// アクティブポイントに最大値を代入
-		activePoint = ACTIVEPOINT_MAX;
-	}
-
-
-	// 衝突関連の処理
-	if (boxCollider->GetCollModelInfo().empty() == false)
-	{
-		for (const CollModelInfo& collModelInfoElem : boxCollider->GetCollModelInfo())
-		{
-			// 衝突したモデルを取得
-			ModelObject* collModel = collModelInfoElem.collModel;
-			// オブジェクトがNULLだったら、スキップして次の要素へ
-			if (collModel == NULL) { continue; }
-
-			// ショットと衝突
-			if (collModel->GetModelType() == ModelType::TANK_SHOT)
-			{
-				// コールバック関数
-				onCollisionShot(collModelInfoElem);
-			}
-		}
-	}
+	CalculationTurretRelativePosition();	// 砲塔の相対位置を算出
+	CalculationPartsDirection();			// 各部品の向きベクトルを算出
+	CalculationTurretTipPos();				// 砲塔の先端の座標を算出
+	CalculationImpactPosition();			// ショットの着弾地点を算出
+	UpdateInvincibleState();				// 無敵状態を更新
+	UpdateCharacterState();					// キャラクターの状態を更新
+	UpdateReloadState();					// リロードの状態を更新
+	UpdateMoveState();						// 移動の状態を更新
+	UpdateFiringShotNum();					// 発射するショットの数を更新
+	UpdateActivePoint();					// アクティブポイントを更新
+	UpdateRaycastParameter();				// レイキャストのパラメータを更新
+	UpdateColliderParameter();				// コライダーのパラメータを更新
+	UpdateSoundPosition();					// サウンドの再生位置を更新
+	UpdateEngineSound();					// エンジン音を更新
+	CallingCollisionCallback();				// 衝突時のコールバック関数を呼ぶ
 
 	// トランスフォームをセット
 	tank[PartsType::BODY]->SetTransform(bodyTransform);			// 車体
 	tank[PartsType::TURRET]->SetTransform(turretTransform);		// 砲塔
+
+	// 戦車が破壊されている場合は、黒煙のエフェクトを再生し、
+	// 残りのエフェクトの再生をスキップする
+	if (state == State::BROKEN)
+	{
+		// 破壊後の黒煙のエフェクトを再生
+		PlayEffectForBrokenBlackSmoke();
+		// キャラクターの制御フラグをfalseに変更
+		isControling = false;
+
+		return;
+	}
+
+	// 各エフェクトを再生
+	PlayEffectForExhaustGas();			// 排気ガス
+	PlayEffectforMoveSandSmoke();		// 移動中の土煙
+	PlayEffectForBrokenBlackSmoke();	// 破壊後の黒煙
 }
 
 /*-------------------------------------------*/
-/* 共通の描画処理
+/* 共通のモデルを描画
 /*-------------------------------------------*/
-void CharacterBase::commonDraw()
+void CharacterBase::DrawCommonModel()
 {
 	for (int i = 0; i < PartsType::TYPE_NUM; i++)
 	{
@@ -399,7 +298,7 @@ void CharacterBase::commonDraw()
 /*-------------------------------------------*/
 /* 各部品の向きベクトルを算出
 /*-------------------------------------------*/
-void CharacterBase::calculationPartsDirection()
+void CharacterBase::CalculationPartsDirection()
 {
 	// 回転角から回転行列を算出して、回転行列から向きベクトルを算出する
 	MATRIX rotationMatrix = GetRotMatrixFromRot(bodyTransform.rotation);
@@ -412,11 +311,11 @@ void CharacterBase::calculationPartsDirection()
 /*-------------------------------------------*/
 /* 砲塔の先端の座標を算出
 /*-------------------------------------------*/
-void CharacterBase::calculationTurretTipPos()
+void CharacterBase::CalculationTurretTipPos()
 {
 	// 先端座標算出用ローカル変数
-	const float TURRETTIP_DISTANCE = 600;	// 砲塔の先端までの距離
-	const float TURRETTIP_HEIGHT   = 100;	// 砲塔の先端までの高さ
+	static const float TURRETTIP_DISTANCE = 600;	// 砲塔の先端までの距離
+	static const float TURRETTIP_HEIGHT   = 100;	// 砲塔の先端までの高さ
 
 	// 先端座標算出
 	turretTipPosition = turretTransform.direction * TURRETTIP_DISTANCE;		// 向きに移動量を加える
@@ -428,7 +327,7 @@ void CharacterBase::calculationTurretTipPos()
 /*-------------------------------------------*/
 /* ショットの着弾地点の算出
 /*-------------------------------------------*/
-void CharacterBase::calculationImpactPosition()
+void CharacterBase::CalculationImpactPosition()
 {
 	// レイキャストに衝突しているモデルが無ければ、
 	// 何も処理せずにそのまま関数を抜ける
@@ -445,9 +344,9 @@ void CharacterBase::calculationImpactPosition()
 }
 
 /*-------------------------------------------*/
-/* 無敵状態の制御
+/* 無敵状態を更新
 /*-------------------------------------------*/
-void CharacterBase::controlInvincibleState()
+void CharacterBase::UpdateInvincibleState()
 {
 	// 無敵状態のフラグが立っている場合のみ処理を行う
 	if (isInvincible)
@@ -484,9 +383,74 @@ void CharacterBase::controlInvincibleState()
 }
 
 /*-------------------------------------------*/
+/* キャラクターの状態を更新
+/*-------------------------------------------*/
+void CharacterBase::UpdateCharacterState()
+{
+	// スキルモード発動中の処理
+	if (state == State::SKILL_ACTIVE)
+	{
+		// スキル発動中はアクティブポイントを減らしていく
+		activePoint -= 7;
+
+		// アクティブポイントが０を下回らないようにする
+		if (activePoint <= 0)
+		{
+			// 通常の状態に変更する
+			state = State::NORMAL;
+			activePoint = 0;
+		}
+	}
+
+	// アクティブポイントが満タンになったら、状態を表すステートを変更する
+	if (activePoint >= ACTIVEPOINT_MAX) { state = State::ACTIVEGAUGE_FULL; }
+	// アクティブポイントが最大値を上回らないようにする
+	if (activePoint > ACTIVEPOINT_MAX)
+	{
+		// アクティブポイントに最大値を代入
+		activePoint = ACTIVEPOINT_MAX;
+	}
+	
+	// キャラクターの制御フラグがfalseだった場合は、
+	// 移動の操作中を表すフラグをfalseに変更
+	if (isControling == false)
+	{
+		isMoveInputting = false;
+	}
+}
+
+/*-------------------------------------------*/
+/* リロードの状態を更新
+/*-------------------------------------------*/
+void CharacterBase::UpdateReloadState()
+{
+	// ショットのリロード処理
+	if (isReload)
+	{
+		// 現在のリロード時間を表すカウントを加算していく
+		currentReloadTime++;
+
+		// リロード完了手前で、装填音を再生
+		if (currentReloadTime == RELOAD_TIME - 40)
+		{
+			sounds.shotReload->Playing(DX_PLAYTYPE_BACK);
+		}
+
+		// 現在のリロード時間が指定のリロード時間を超えたら、
+		// リロードフラグを倒す
+		if (currentReloadTime >= RELOAD_TIME)
+		{
+			isReload = false;
+			// カウントを０に初期化
+			currentReloadTime = 0;
+		}
+	}
+}
+
+/*-------------------------------------------*/
 /* 移動の状態を更新
 /*-------------------------------------------*/
-void CharacterBase::updateMoveState()
+void CharacterBase::UpdateMoveState()
 {
 	// 停止
 	if ((int)movingSpeed <= 0)
@@ -514,9 +478,40 @@ void CharacterBase::updateMoveState()
 }
 
 /*-------------------------------------------*/
+/* 発射するショットの数を更新
+/*-------------------------------------------*/
+void CharacterBase::UpdateFiringShotNum()
+{
+	// スキル発動時の発射するショットの数を設定
+	if (state == State::SKILL_ACTIVE)
+	{
+		// スキル発動時
+		firingShotNum = SKILL_FIRINGSHOT_NUM;
+	}
+	else
+	{
+		// スキル未発動時は１発のみ
+		firingShotNum = 1;
+	}
+}
+
+/*-------------------------------------------*/
+/* アクティブポイントを更新
+/*-------------------------------------------*/
+void CharacterBase::UpdateActivePoint()
+{
+	// 移動中の処理
+	if (moveState != MoveState::STOP)
+	{
+		// アクティブポイントを加算していく
+		AddActivePoint(1);
+	}
+}
+
+/*-------------------------------------------*/
 /* レイキャストのパラメータを更新
 /*-------------------------------------------*/
-void CharacterBase::updateRaycastParameter()
+void CharacterBase::UpdateRaycastParameter()
 {
 	// レイキャストの原点を設定
 	turretDirRaycast->origin = turretTransform.position;
@@ -529,7 +524,7 @@ void CharacterBase::updateRaycastParameter()
 /*-------------------------------------------*/
 /* コライダーのパラメータを更新
 /*-------------------------------------------*/
-void CharacterBase::updateColliderParameter()
+void CharacterBase::UpdateColliderParameter()
 {
 	// 車体のボックスコライダーの基準位置
 	boxCollider->center = bodyTransform.position + COLLIDER_POS_OFFSET;
@@ -538,7 +533,7 @@ void CharacterBase::updateColliderParameter()
 /*-------------------------------------------*/
 /* サウンドの再生位置を更新
 /*-------------------------------------------*/
-void CharacterBase::updateSoundPosition()
+void CharacterBase::UpdateSoundPosition()
 {
 	// エンジン音
 	sounds.engineStart->SetPlayingPosition(bodyTransform.position);		// エンジン：始動
@@ -555,10 +550,20 @@ void CharacterBase::updateSoundPosition()
 }
 
 /*-------------------------------------------*/
-/* エンジン音の制御
+/* エンジン音を更新
 /*-------------------------------------------*/
-void CharacterBase::controlEngineSound()
+void CharacterBase::UpdateEngineSound()
 {
+	// エンジンサウンドの再生フラグがfalseだった場合、何もせずに関数を抜ける
+	if (isEngineSoundPlaying == false) { return; }
+	// HPが０だった場合、再生中のエンジン音を停止して関数を抜ける
+	if (hitPoint <= 0)
+	{
+		// 再生中のエンジン音を停止する
+		StopEngineSound();
+		return;
+	}
+
 	// 停止中
 	if (moveState == MoveState::STOP)
 	{
@@ -632,15 +637,39 @@ void CharacterBase::controlEngineSound()
 }
 
 /*-------------------------------------------*/
+/* 衝突時のコールバック関数を呼ぶ
+/*-------------------------------------------*/
+void CharacterBase::CallingCollisionCallback()
+{
+	// 衝突関連の処理
+	if (boxCollider->GetCollModelInfo().empty() == false)
+	{
+		for (const CollModelInfo& collModelInfoElem : boxCollider->GetCollModelInfo())
+		{
+			// 衝突したモデルを取得
+			ModelObject* collModel = collModelInfoElem.collModel;
+			// オブジェクトがNULLだったら、スキップして次の要素へ
+			if (collModel == NULL) { continue; }
+
+			// ショットと衝突
+			if (collModel->GetObjectType() == ObjectType::CHARACTER_SHOT)
+			{
+				// コールバック関数
+				OnCollisionShot(collModelInfoElem);
+			}
+		}
+	}
+}
+
+/*-------------------------------------------*/
 /* 衝突コールバック関数：ショットと衝突
 /*-------------------------------------------*/
-void CharacterBase::onCollisionShot(const CollModelInfo& shot)
+void CharacterBase::OnCollisionShot(const CollModelInfo& shot)
 {
 	// 再生位置をセット
 	sounds.damage->SetPlayingPosition(bodyTransform.position);
 	// ショットによる被弾音を再生する
 	sounds.damage->Playing(DX_PLAYTYPE_BACK);
-
 
 	// 無敵中だった場合は、無視して関数を抜ける
 	if (isInvincible) { return; }
@@ -652,7 +681,7 @@ void CharacterBase::onCollisionShot(const CollModelInfo& shot)
 	if (hitPoint > 0)
 	{
 		// ダメージエフェクトを描画
-		playEffectForDamage();
+		PlayEffectForDamage();
 
 		// 無敵フラグをtrueにする
 		isInvincible = true;
@@ -661,7 +690,7 @@ void CharacterBase::onCollisionShot(const CollModelInfo& shot)
 	else
 	{
 		// 破壊エフェクトを描画
-		playEffectForBrokenExplosion();
+		PlayEffectForBrokenExplosion();
 
 		// 状態を"破壊"に変更
 		state = State::BROKEN;

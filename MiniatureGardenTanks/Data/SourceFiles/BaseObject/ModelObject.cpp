@@ -6,31 +6,13 @@
 /*-------------------------------------------*/
 /* コンストラクタ
 /*-------------------------------------------*/
-ModelObject::ModelObject(int modelHandle, ModelType type)
+ModelObject::ModelObject(const GameObject* parentObject)
 {
 	// モデルハンドルを初期化
 	this->modelHandle = 0;
 
-	// 引数にNULLが渡されたら、関数を抜ける
-	if (modelHandle == NULL) { return; }
-	
-	// モデルハンドルのコピーを行う
-	this->modelHandle = MV1DuplicateModel(modelHandle);
-	// モデルの種類をセット
-	modelType = type;
-	// モデルのメッシュの数を取得
-	modelMeshNum = MV1GetMeshNum(this->modelHandle);
-
-	// コピーに失敗したら、エラー文を表示
-	if (this->modelHandle == -1)
-	{
-		ErrorData errorData;
-		errorData.errorMessage           = "モデルのコピーに失敗しました。";
-		errorData.detectedErrorClassName = "ModelObject";
-
-		// エラーデータをリストに挿入する
-		ERROR_MESSAGE.SetErrorData(errorData);
-	}
+	// コンポーネントが追加されている親オブジェクトを取得
+	this->parentObject = parentObject;
 }
 
 /*-------------------------------------------*/
@@ -40,6 +22,9 @@ ModelObject::~ModelObject()
 {
 	// モデルの削除
 	SafeDeleteModel(modelHandle);
+
+	// コンポーネントもとの親オブジェクト
+	parentObject = NULL;
 }
 
 /*-------------------------------------------*/

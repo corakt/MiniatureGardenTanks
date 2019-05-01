@@ -4,11 +4,11 @@
 /*-------------------------------------------*/
 /* エフェクト：ダメージ
 /*-------------------------------------------*/
-void CharacterBase::playEffectForDamage()
+void CharacterBase::PlayEffectForDamage()
 {
 	// エフェクト用パラメータ
-	const VECTOR POS_OFFSET = VGet(0,100,0);		// 再生位置オフセット
-	const VECTOR SCALE      = VGet(300,300,300);	// 再生スケール
+	static const VECTOR POS_OFFSET = VGet(0,100,0);		// 再生位置オフセット
+	static const VECTOR SCALE      = VGet(300,300,300);	// 再生スケール
 
 	// 再生するエフェクトをセット
 	effects.damage = PlayEffekseer3DEffect(EFFECT_MANAGER.GetHandle(ResourceEffectManager::EffectType::TANK_HITSPARK));
@@ -23,11 +23,11 @@ void CharacterBase::playEffectForDamage()
 /*-------------------------------------------*/
 /* エフェクト：戦車の破壊
 /*-------------------------------------------*/
-void CharacterBase::playEffectForBrokenExplosion()
+void CharacterBase::PlayEffectForBrokenExplosion()
 {
 	// エフェクト用パラメータ
-	const VECTOR SCALE = VGet(3, 3, 3);	// 再生スケール
-	const float  SPEED = 1.5f;			// 再生スピード
+	static const VECTOR SCALE = VGet(3, 3, 3);	// 再生スケール
+	static const float  SPEED = 1.5f;			// 再生スピード
 
 	// 再生するエフェクトをセット
 	effects.brokenExplosion = PlayEffekseer3DEffect(EFFECT_MANAGER.GetHandle(ResourceEffectManager::EffectType::TANK_BREAKEXPLOSION));
@@ -44,12 +44,12 @@ void CharacterBase::playEffectForBrokenExplosion()
 /*-------------------------------------------*/
 /* エフェクト：破壊後の黒煙
 /*-------------------------------------------*/
-void CharacterBase::playEffectForBrokenBlackSmoke()
+void CharacterBase::PlayEffectForBrokenBlackSmoke()
 {
 	// エフェクト用パラメータ
-	const VECTOR POS_OFFSET = VGet(0, 0,-200);
-	const VECTOR SCALE = VGet(2, 1, 2);
-	const int PLAY_INTERVAL = 250;
+	static const VECTOR POS_OFFSET = VGet(0, 0,-200);
+	static const VECTOR SCALE = VGet(2, 1, 2);
+	static const int PLAY_INTERVAL = 250;
 
 	// HPが無くなっていたら
 	if (hitPoint <= 0)
@@ -75,10 +75,10 @@ void CharacterBase::playEffectForBrokenBlackSmoke()
 /*-------------------------------------------*/
 /* エフェクト：砲撃時の爆発
 /*-------------------------------------------*/
-void CharacterBase::playEffectForFiringExplosion()
+void CharacterBase::PlayEffectForFiringExplosion()
 {
 	// エフェクト用パラメータ
-	const float SPEED = 2;		// エフェクトの再生スピード
+	static const float SPEED = 2;		// エフェクトの再生スピード
 
 	// 再生するエフェクトをセット
 	effects.firingExplosion = PlayEffekseer3DEffect(EFFECT_MANAGER.GetHandle(ResourceEffectManager::TANK_FIRINGEXPLOSION));
@@ -91,13 +91,13 @@ void CharacterBase::playEffectForFiringExplosion()
 /*-------------------------------------------*/
 /* エフェクト：排気ガス
 /*-------------------------------------------*/
-void CharacterBase::playEffectForExhaustGas()
+void CharacterBase::PlayEffectForExhaustGas()
 {
 	// エフェクト用パラメータ
-	VECTOR position         = ZERO_VECTOR;				// 再生位置
-	const VECTOR POS_OFFSET = VGet(-330,100,0);			// 再生位置オフセット
-	const VECTOR SCALE      = VGet(1.5f,1.5f,1.5f);		// スケール
-	const float  SPEED      = 2;						// 再生スピード
+	static VECTOR position         = ZERO_VECTOR;				// 再生位置
+	static const VECTOR POS_OFFSET = VGet(-330,100,0);			// 再生位置オフセット
+	static const VECTOR SCALE      = VGet(1.5f,1.5f,1.5f);		// スケール
+	static const float  SPEED      = 2;						// 再生スピード
 
 	int playInterval = 0;
 	// 移動中か停止中かで再生する間隔を変更する
@@ -128,13 +128,13 @@ void CharacterBase::playEffectForExhaustGas()
 /*-------------------------------------------*/
 /* エフェクト：移動時の土煙
 /*-------------------------------------------*/
-void CharacterBase::playEffectforMoveSandSmoke()
+void CharacterBase::PlayEffectforMoveSandSmoke()
 {
 	// エフェクト用パラメータ
-	const VECTOR POS_OFFSET    = VGet(0,-50,0);
-	const VECTOR SCALE         = VGet(1.5f,2.5f,1.5f);
-	const float  SPEED         = 1.5f;
-	const int    PLAY_INTERVAL = 5;
+	static const VECTOR POS_OFFSET    = VGet(0,-50,0);
+	static const VECTOR SCALE         = VGet(1.5f,2.5f,1.5f);
+	static const float  SPEED         = 1.5f;
+	static const int    PLAY_INTERVAL = 5;
 
 	// 移動中
 	if (moveState != MoveState::STOP)
