@@ -76,7 +76,7 @@ void CameraBase::Initialize(const VECTOR position, const VECTOR lookAtPos)
 void CameraBase::Update()
 {
 	// カメラの揺らし処理
-	ShakeCamera();
+	shakeCamera();
 	// カメラの座標と注視点座標をセット
 	SetCameraPositionAndTarget_UpVecY(transform.position, lookAtPosition);
 	// DXライブラリのカメラとEffekseerのカメラを同期する
@@ -102,7 +102,7 @@ void CameraBase::CallingToShakeCamera(float shakeWidth, float shakeTime, float s
 /*-------------------------------------------*/
 /* カメラの揺らし処理
 /*-------------------------------------------*/
-void CameraBase::ShakeCamera()
+void CameraBase::shakeCamera()
 {
 	if (shakeParam.isShake)
 	{

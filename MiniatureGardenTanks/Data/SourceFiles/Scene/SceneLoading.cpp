@@ -170,10 +170,10 @@ void SceneLoading::Initialize()
 	tankAnimation.animCount = 0;
 
 	// 画像分割用パラメータ
-	static const int DIV_NUM_X  = 5;		// 横分割数
-	static const int DIV_NUM_Y  = 4;		// 縦分割数
-	static const int DIV_SIZE_X = 300;		// 横分割サイズ
-	static const int DIV_SIZE_Y = 200;		// 縦分割サイズ
+	const int DIV_NUM_X  = 5;		// 横分割数
+	const int DIV_NUM_Y  = 4;		// 縦分割数
+	const int DIV_SIZE_X = 300;		// 横分割サイズ
+	const int DIV_SIZE_Y = 200;		// 縦分割サイズ
 
 	// アニメーション用の画像を読み込む
 	LoadDivGraph("Data/ResourceFiles/Sprites/Loading/Tank_Anim.png",	// ファイルへのパス

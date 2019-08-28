@@ -44,7 +44,7 @@ void ShotManager::CreateShot()
 		if (shot[j] == NULL)
 		{
 			// ショットのインスタンスを生成する
-			shot[j] = new CharacterShot();
+			shot[j] = new CharacterShot(MODEL_MANAGER.GetHandle(ResourceModelManager::ModelType::TANK_SHOT),ModelType::TANK_SHOT);
 		}
 		
 		// 生成したショットを未使用リストに挿入
@@ -76,60 +76,60 @@ void ShotManager::DestroyShot()
 /*-------------------------------------------*/
 bool ShotManager::FiringShot(CharacterBase* firingCharacter, UINT firingNum)
 {
-//	// キャラクターのポインタがNULLだったら終了して関数を抜ける
-//	if (firingCharacter == NULL) { return false; }
-//
-//	// 飛ばすショットの数から最初に設置するショットのY軸角度を算出
-//	float rotY = (float)((firingNum / 2) / -10.0f);
-//
-//	// キャラクターの車体オブジェクトを取得
-//	ModelObject* tankBody = firingCharacter->GetParts(CharacterBase::PartsType::BODY);
-//
-//	// 砲塔のトランスフォームをセットする
-//	Transform turretTrans = firingCharacter->GetParts(CharacterBase::PartsType::TURRET)->GetTransform();
-//
-//	// 発射するショットの数だけセットする
-//	for (UINT i = 0; i < firingNum; i++)
-//	{
-//		// 未使用リストの先頭からショットを一つ取り出す
-//		CharacterShot* shot = freeShot.front();
-//		// ショットのトランスフォームを取得
-//		Transform shotTrans = shot->GetTransform();
-//
-//		// 砲塔の先端位置をショットの発射位置としてセット
-//		shotTrans.position = firingCharacter->GetTurretTipPos();
-//
-//		// ショットを撃ったキャラクターのオブジェクトIDを取得
-//		shot->SetFiringCharacterObjectId(tankBody->GetObjectId());
-//
-//		// ショットの回転角を砲塔と同じ回転角にセットする
-//		shotTrans.rotation = turretTrans.rotation;
-//		// ショットのY軸の角度を0.1ずつずらしながら設置していく
-//		shotTrans.rotation.y += rotY;
-//		rotY += 0.1f;
-//		
-//		// ショットの回転角から回転行列を取得
-//		MATRIX rotMatrix = GetRotMatrixFromRot(shotTrans.rotation);
-//		// 回転行列を使用してベクトルを回転させる
-//		shotTrans.direction = VTransform(shotTrans.direction, rotMatrix);
-//
-//		// トランスフォームをセット
-//		shot->SetTransform(shotTrans);
-//
-//		// ショットがキャラクターにヒットした際のコールバック関数をセット
-//		shot->OnCharacterHitShot = std::bind(&CharacterBase::OnCharacterHitShot,firingCharacter);
-//
-//		// ショットの稼働フラグをtrueにする
-//		shot->SetActiveFlag(true);
-//		// ショットの描画フラグをtrueにする
-//		shot->SetDrawFlag(true);
-//
-//		// ショットを使用リストにセットする
-//		useShot.push_back(shot);
-//
-//		// 未使用リストの先頭要素を削除する
-//		freeShot.pop_front();
-//	}
+	// キャラクターのポインタがNULLだったら終了して関数を抜ける
+	if (firingCharacter == NULL) { return false; }
+
+	// 飛ばすショットの数から最初に設置するショットのY軸角度を算出
+	float rotY = (float)((firingNum / 2) / -10.0f);
+
+	// キャラクターの車体オブジェクトを取得
+	ModelObject* tankBody = firingCharacter->GetParts(CharacterBase::PartsType::BODY);
+
+	// 砲塔のトランスフォームをセットする
+	Transform turretTrans = firingCharacter->GetParts(CharacterBase::PartsType::TURRET)->GetTransform();
+
+	// 発射するショットの数だけセットする
+	for (UINT i = 0; i < firingNum; i++)
+	{
+		// 未使用リストの先頭からショットを一つ取り出す
+		CharacterShot* shot = freeShot.front();
+		// ショットのトランスフォームを取得
+		Transform shotTrans = shot->GetTransform();
+
+		// 砲塔の先端位置をショットの発射位置としてセット
+		shotTrans.position = firingCharacter->GetTurretTipPos();
+
+		// ショットを撃ったキャラクターのオブジェクトIDを取得
+		shot->SetFiringCharacterObjectId(tankBody->GetObjectId());
+
+		// ショットの回転角を砲塔と同じ回転角にセットする
+		shotTrans.rotation = turretTrans.rotation;
+		// ショットのY軸の角度を0.1ずつずらしながら設置していく
+		shotTrans.rotation.y += rotY;
+		rotY += 0.1f;
+		
+		// ショットの回転角から回転行列を取得
+		MATRIX rotMatrix = GetRotMatrixFromRot(shotTrans.rotation);
+		// 回転行列を使用してベクトルを回転させる
+		shotTrans.direction = VTransform(shotTrans.direction, rotMatrix);
+
+		// トランスフォームをセット
+		shot->SetTransform(shotTrans);
+
+		// ショットがキャラクターにヒットした際のコールバック関数をセット
+		shot->OnCharacterHitShot = std::bind(&CharacterBase::OnCharacterHitShot,firingCharacter);
+
+		// ショットの稼働フラグをtrueにする
+		shot->SetActiveFlag(true);
+		// ショットの描画フラグをtrueにする
+		shot->SetDrawFlag(true);
+
+		// ショットを使用リストにセットする
+		useShot.push_back(shot);
+
+		// 未使用リストの先頭要素を削除する
+		freeShot.pop_front();
+	}
 	return true;
 }
 

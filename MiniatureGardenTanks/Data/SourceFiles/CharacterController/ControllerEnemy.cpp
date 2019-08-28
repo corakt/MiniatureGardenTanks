@@ -67,8 +67,8 @@ ControllerEnemy::~ControllerEnemy()
 /*-------------------------------------------*/
 void ControllerEnemy::Initialize()
 {
-	// 共通のパラメータを初期化
-	InitializeCommonParameter();
+	// 共通の初期化処理
+	commonInitialize();
 
 	// 各変数の初期化
 	moveTargetPosition  = ZERO_VECTOR;						// 移動目標位置
@@ -93,7 +93,7 @@ void ControllerEnemy::Initialize()
 
 	// ランダム関連のパラメータを設定
 	std::random_device randomDevice;						// ランダムデバイスを生成
-	randomGenerator.seed(randomDevice());					// ランダムのシード値を設定
+	mt19937.seed(randomDevice());							// ランダムのシード値を設定
 
 	// キャラクターの車体のオブジェクトを取得
 	ModelObject* tankBody = controlCharacter->GetParts(CharacterBase::PartsType::BODY);
@@ -149,15 +149,15 @@ void ControllerEnemy::Update()
 	charaViewingDirRaycast->origin = characterTurretTrans.position;		// レイキャストの原点をキャラクターと同じ位置にする
 
 	// 移動目標位置を設定
-	SetTargetMovePosition();
+	setTargetMovePosition();
 	// キャラクターの位置を基準に上下左右の地面のデータを取得
-	GetCharacterFourDirGroundData();
+	getCharacterFourDirGroundData();
 	// 通過した地面のIDを取得
-	GetThroughTerrainData();
+	getThroughTerrainData();
 	// 視野の範囲内に存在している敵キャラクターを取得
-	GetViewingRangeEnemyCharacter();
+	getViewingRangeEnemyCharacter();
 	// コライダーに衝突している壁のデータを取得
-	GetAroundRangeWallData();
+	getAroundRangeWallData();
 
 	// 戦車が破壊されていなければ、状態の制御を行う
 	if (controlCharacter->GetState() != CharacterBase::State::BROKEN)
@@ -186,22 +186,22 @@ void ControllerEnemy::Update()
 
 		// 行動パターン：探索
 	case BehaviorPattern::SEARCH:
-		BehaviorOfSearch();
+		behaviorOfSearch();
 		break;
 
 		// 行動パターン：追跡
 	case BehaviorPattern::CHASE:
-		BehaviorOfChase();
+		behaviorOfChase();
 		break;
 
 		// 行動パターン：逃避
 	case BehaviorPattern::ESCAPE:
-		BehaviorOfEscape();
+		behaviorOfEscape();
 		break;
 
 	default:
 		// デフォルトは"探索"に設定しておく
-		BehaviorOfSearch();
+		behaviorOfSearch();
 		break;
 	}
 
@@ -215,34 +215,34 @@ void ControllerEnemy::Update()
 		{
 			// 移動パターン：目標位置に向かって移動
 		case MovePattern::TOWARDS_TARGETPOS:
-			MoveOfTowardsTargetPos();
+			moveOfTowardsTargetPos();
 			break;
 
 			// 移動パターン：壁に沿って移動
 		case MovePattern::ALONG_WALL:
-			MoveOfAlongWall();
+			moveOfAlongWall();
 			break;
 
 		default:
 			// デフォルトは"目標位置に向かって移動"に設定しておく
-			MoveOfTowardsTargetPos();
+			moveOfTowardsTargetPos();
 			break;
 		}
 
 		/*-------------------------------------------*/
 		/* 車体の移動
 		/*-------------------------------------------*/
-		Move(true);
+		move(true);
 
 		/*-------------------------------------------*/
 		/* 車体の回転
 		/*-------------------------------------------*/
-		RotationBody(moveTargetDirection, true);
+		rotationBody(moveTargetDirection, true);
 
 		/*-------------------------------------------*/
 		/* 砲塔の回転
 		/*-------------------------------------------*/
-		RotationTurret(turretDirection);
+		rotationTurret(turretDirection);
 
 		/*-------------------------------------------*/
 		/* ショットの発射時の反動
@@ -252,7 +252,7 @@ void ControllerEnemy::Update()
 		// フラグがたっている場合は、反動の処理にうつる
 		if (isReaction)
 		{
-			FiringReaction();
+			firingReaction();
 		}
 	}
 
@@ -279,7 +279,7 @@ void ControllerEnemy::ControlBehaviorPattern()
 		targetCharacterData = viewingRangeCharacterData.front();
 
 		// 敵キャラクターとの間に壁が存在しているか
-		bool isWall = ExistWallBetweenEnemyAndSelf(targetCharacterData);
+		bool isWall = existWallBetweenEnemyAndSelf(targetCharacterData);
 		// 壁が存在していなければ、追跡を開始する
 		if (isWall == false)
 		{
@@ -307,7 +307,7 @@ void ControllerEnemy::ControlBehaviorPattern()
 void ControllerEnemy::ControlMovePattern()
 {
 	// キャラクターが狭い範囲内に留まり続けていないか調べる
-	bool isAreaStay = IsNarrowRangeStayCharacter();
+	bool isAreaStay = isNarrowRangeStayCharacter();
 	if (isAreaStay)
 	{
 		// 留まり続けていた場合、
@@ -332,7 +332,7 @@ void ControllerEnemy::ControlMovePattern()
 /*-------------------------------------------*/
 /* 行動パターン：探索
 /*-------------------------------------------*/
-void ControllerEnemy::BehaviorOfSearch()
+void ControllerEnemy::behaviorOfSearch()
 {
 	// 砲塔を車体と同じ向きにする
 	turretDirection = characterBodyTrans.direction;
@@ -341,7 +341,7 @@ void ControllerEnemy::BehaviorOfSearch()
 /*-------------------------------------------*/
 /* 行動パターン：追跡
 /*-------------------------------------------*/
-void ControllerEnemy::BehaviorOfChase()
+void ControllerEnemy::behaviorOfChase()
 {
 	// 敵キャラクターの座標を取得
 	VECTOR enemyPos = targetCharacterData.position;
@@ -394,7 +394,7 @@ void ControllerEnemy::BehaviorOfChase()
 /*-------------------------------------------*/
 /* 行動パターン：逃避
 /*-------------------------------------------*/
-void ControllerEnemy::BehaviorOfEscape()
+void ControllerEnemy::behaviorOfEscape()
 {
 	// 一番近いキャラクターを取得
 	EnemyCharacterData nearCharacter = viewingRangeCharacterData.front();
@@ -410,7 +410,7 @@ void ControllerEnemy::BehaviorOfEscape()
 /*-------------------------------------------*/
 /* 移動パターン：目標位置に向かって移動
 /*-------------------------------------------*/
-void ControllerEnemy::MoveOfTowardsTargetPos()
+void ControllerEnemy::moveOfTowardsTargetPos()
 {
 	// キャラクターを中心に上下左右の地面のデータが存在していなければ
 	// そのまま関数を抜ける
@@ -426,7 +426,7 @@ void ControllerEnemy::MoveOfTowardsTargetPos()
 /*-------------------------------------------*/
 /* 移動パターン：壁に沿って移動
 /*-------------------------------------------*/
-void ControllerEnemy::MoveOfAlongWall()
+void ControllerEnemy::moveOfAlongWall()
 {
 	// コライダーに衝突している壁のオブジェクトが無ければ
 	// そのまま関数を抜ける

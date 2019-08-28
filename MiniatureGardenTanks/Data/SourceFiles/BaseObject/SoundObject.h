@@ -1,12 +1,12 @@
 ﻿#pragma once
-#include "../BaseObject/GameObject.h"
+#include "../BaseObject/Object.h"
 #include <DxLib.h>
 
 /*-------------------------------------------*/
 /* サウンドオブジェクトクラス
 /* （サウンドのベースとなるクラス）
 /*-------------------------------------------*/
-class SoundObject : public GameObject
+class SoundObject : public Object
 {
 public:
 			 SoundObject(int soundHandle);	// コンストラクタ

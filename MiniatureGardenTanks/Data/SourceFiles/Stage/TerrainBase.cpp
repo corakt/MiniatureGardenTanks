@@ -4,10 +4,11 @@
 /*-------------------------------------------*/
 /* コンストラクタ
 /*-------------------------------------------*/
-TerrainBase::TerrainBase()
+TerrainBase::TerrainBase(int modelHandle, TerrainId terrainId, ModelType type)
+	:ModelObject::ModelObject(modelHandle, type)
 {
-	// 地形のタグを設定
-	
+	// 地形IDを取得
+	this->id = terrainId;
 }
 
 /*-------------------------------------------*/
@@ -19,14 +20,14 @@ TerrainBase::~TerrainBase()
 }
 
 /*-------------------------------------------*/
-/* 共通の初期化パラメータ
+/* 共通の初期化
 /*-------------------------------------------*/
-void TerrainBase::InitializeCommonParameter()
+void TerrainBase::commonInitialize()
 {
 	// 各変数の初期化
 	transform.scale = VGet(3, 3, 3);	// モデルのスケール
 	isActive        = true;				// 稼働中かどうか
-	terrainModel->SetDrawFlag(true);	// 描画フラグをセット
+	isDraw          = true;				// 描画中かどうか
 }
 
 /*-------------------------------------------*/
@@ -37,7 +38,7 @@ void TerrainBase::Draw()
 	if (isActive)
 	{
 		// カメラの視界に入っているか調べるボックスのサイズを設定
-		static const VECTOR VIEW_CLIP_BOX_SIZE = VGet(2300,2300,2300);
+		const VECTOR VIEW_CLIP_BOX_SIZE = VGet(2300,2300,2300);
 
 		// 関数の"CheckCameraViewClip_Box"は、正確には2点の座標で表される
 		// 透明のボックスがカメラの視界に入っているかどうかで判定している。
@@ -60,7 +61,7 @@ void TerrainBase::Draw()
 		if (CheckCameraViewClip_Box(rectPos1, rectPos2) == false)
 		{
 			// 視界に存在している地形のみ描画する
-			terrainModel->DrawModel();
+			DrawModel();
 		}
 	}
 }

@@ -56,7 +56,7 @@ void GetBoxVerticesPosition(VECTOR center, VECTOR size, VECTOR *verticesPosBuffe
 }
 
 // エフェクトハンドル
-static int transitionEffectHandle = -1;
+int transitionEffectHandle = -1;
 
 /*-------------------------------------------*/
 /* トランジションエフェクト「フェード」を再生

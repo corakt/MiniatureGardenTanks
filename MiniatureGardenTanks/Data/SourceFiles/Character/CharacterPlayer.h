@@ -38,7 +38,6 @@ public:
 	// スキルを発動
 	void ActivateSkill() override;
 
-private:
 	void DrawHpGauge();				// HPゲージの表示
 	void DrawActiveGauge();			// アクティブゲージの表示
 	void DrawHitLogo();				// 攻撃ヒット時のロゴを描画
@@ -47,6 +46,7 @@ private:
 	void DrawReloadGauge();			// リロードゲージの描画
 	void DrawSkillCutin();			// スキル使用時のカットインを描画
 
+private:
 	ModelObject*   laser;			// 戦車から伸びるレーザー
 	PlayerEffects  effects;			// エフェクト
 	PlayerCounters counters;		// カウンター

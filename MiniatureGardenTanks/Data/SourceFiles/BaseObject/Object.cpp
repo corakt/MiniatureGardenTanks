@@ -1,25 +1,25 @@
 ﻿#pragma once
-#include "../BaseObject/GameObject.h"
-#include "../BaseObject/IdGenerator.h"
+#include "../BaseObject/Object.h"
+#include "../BaseObject/ObjectIdManager.h"
 
 /*-------------------------------------------*/
 /* コンストラクタ
 /*-------------------------------------------*/
-GameObject::GameObject()
+Object::Object()
 {
 	// 初期化
 	isActive = false;
 	objectId = 0;
 
 	// オブジェクトIDを生成
-	objectId = ID_GENERATOR.Generate();
+	objectId = OBJECTID_MANAGER.CreateId();
 }
 
 /*-------------------------------------------*/
 /* デストラクタ
 /*-------------------------------------------*/
-GameObject::~GameObject()
+Object::~Object()
 {
 	// オブジェクトIDを削除する
-	ID_GENERATOR.Delete(objectId);
+	OBJECTID_MANAGER.DestroyId(objectId);
 }
