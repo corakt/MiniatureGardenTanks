@@ -89,24 +89,24 @@ public:
 
 private:
 	// 行動パターン関数群
-	void BehaviorOfSearch();	// 探索
-	void BehaviorOfChase();		// 追跡
-	void BehaviorOfEscape();	// 逃避
+	void behaviorOfSearch();	// 探索
+	void behaviorOfChase();		// 追跡
+	void behaviorOfEscape();	// 逃避
 
 	// 行動パターン関数群
-	void MoveOfTowardsTargetPos();		// 目標位置に向かって移動
-	void MoveOfAlongWall();				// 壁に沿って移動
+	void moveOfTowardsTargetPos();		// 目標位置に向かって移動
+	void moveOfAlongWall();				// 壁に沿って移動
 
 	// AI処理関数群
-	void SetTargetMovePosition();									// 移動目標位置を設定
-	void GetThroughTerrainData();									// 通過した地面のIDを取得
-	void GetCharacterFourDirGroundData();							// キャラクターの位置を基準に上下左右の地面のデータを取得
-	void GetViewingRangeEnemyCharacter();							// 視野の範囲内に存在している敵キャラクターを取得
-	void GetAroundRangeWallData();									// キャラクターの付近に存在している壁のデータを取得
-	bool IsNarrowRangeStayCharacter();								// 狭い範囲にキャラクターが留まり続けているか
-	bool ExistWallBetweenEnemyAndSelf(EnemyCharacterData enemy);	// 自分と敵との間に壁が存在しているか
-	VECTOR    GetTerrainPosFromId(TerrainId id);					// 地形IDから地形の座標を取得
-	TerrainId GetTerrainIdFromPos(VECTOR position);					// 地形の座標から地形IDを取得
+	void setTargetMovePosition();									// 移動目標位置を設定
+	void getThroughTerrainData();									// 通過した地面のIDを取得
+	void getCharacterFourDirGroundData();							// キャラクターの位置を基準に上下左右の地面のデータを取得
+	void getViewingRangeEnemyCharacter();							// 視野の範囲内に存在している敵キャラクターを取得
+	void getAroundRangeWallData();									// キャラクターの付近に存在している壁のデータを取得
+	bool isNarrowRangeStayCharacter();								// 狭い範囲にキャラクターが留まり続けているか
+	bool existWallBetweenEnemyAndSelf(EnemyCharacterData enemy);	// 自分と敵との間に壁が存在しているか
+	VECTOR    getTerrainPosFromId(TerrainId id);					// 地形IDから地形の座標を取得
+	TerrainId getTerrainIdFromPos(VECTOR position);					// 地形の座標から地形IDを取得
 
 	VECTOR                 moveTargetPosition;					// 移動目標位置
 	VECTOR                 moveTargetDirection;					// 移動目標への方向
@@ -128,7 +128,7 @@ private:
 	Raycast*                 charaViewingDirRaycast;			// キャラクターの視野と同じ向きのレイキャスト
 
 	// ランダム関連
-	std::mt19937             randomGenerator;					// メルセンヌ・ツイスタ乱数生成器
+	std::mt19937             mt19937;							// メルセンヌ・ツイスタ乱数生成器
 	VectorRandom             moveTargetPosRand;					// 移動目標位置のランダム値
 
 	static const VECTOR NORMALMOVE_TARGETPOS_MIN;				// 通常移動の目標位置の最小値

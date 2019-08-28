@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR lpszCmdLine, i
 	// ウィンドウサイズを設定
 	SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	// ウィンドウモード
-	ChangeWindowMode(TRUE);
+	//ChangeWindowMode(TRUE);
 
 	// DXライブラリの初期化処理
 	if (DxLib_Init() == -1)
@@ -81,7 +81,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR lpszCmdLine, i
 		// 画面内の"printfDx"の内容をクリア
 		clsDx();
 
-		// シーン変更の処理（変更フラグが立っていれば変更）
+		// シーン変更の処理
 		sceneManager->ChangeScene();
 	}
 	

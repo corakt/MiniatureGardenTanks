@@ -20,8 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\SourceFiles\BaseObject\ModelObject.cpp" />
-    <ClCompile Include="Data\SourceFiles\BaseObject\GameObject.cpp" />
-    <ClCompile Include="Data\SourceFiles\BaseObject\IdGenerator.cpp" />
+    <ClCompile Include="Data\SourceFiles\BaseObject\Object.cpp" />
+    <ClCompile Include="Data\SourceFiles\BaseObject\ObjectIdManager.cpp" />
     <ClCompile Include="Data\SourceFiles\BaseObject\SoundObject.cpp" />
     <ClCompile Include="Data\SourceFiles\BaseObject\Transform.cpp" />
     <ClCompile Include="Data\SourceFiles\Camera\CameraBase.cpp" />
@@ -68,8 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\SourceFiles\BaseObject\ModelObject.h" />
-    <ClInclude Include="Data\SourceFiles\BaseObject\GameObject.h" />
-    <ClInclude Include="Data\SourceFiles\BaseObject\IdGenerator.h" />
+    <ClInclude Include="Data\SourceFiles\BaseObject\Object.h" />
+    <ClInclude Include="Data\SourceFiles\BaseObject\ObjectIdManager.h" />
     <ClInclude Include="Data\SourceFiles\BaseObject\SoundObject.h" />
     <ClInclude Include="Data\SourceFiles\BaseObject\Transform.h" />
     <ClInclude Include="Data\SourceFiles\Camera\CameraBase.h" />
@@ -95,7 +95,6 @@
     <ClInclude Include="Data\SourceFiles\Others\HelperFunction.h" />
     <ClInclude Include="Data\SourceFiles\Others\Input.h" />
     <ClInclude Include="Data\SourceFiles\Others\Math3D.h" />
-    <ClInclude Include="Data\SourceFiles\Others\ObjectType.h" />
     <ClInclude Include="Data\SourceFiles\Others\Singleton.h" />
     <ClInclude Include="Data\SourceFiles\Raycast\Raycast.h" />
     <ClInclude Include="Data\SourceFiles\Raycast\RaycastManager.h" />
@@ -119,7 +118,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{A1F5F0AC-17ED-4A24-8D57-99ACD3C5810B}</ProjectGuid>
     <RootNamespace>MiniatureGardenTanks</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

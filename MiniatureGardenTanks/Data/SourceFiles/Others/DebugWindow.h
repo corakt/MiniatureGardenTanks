@@ -6,7 +6,7 @@
 /*-------------------------------------------*/
 /* デバッグ用のウィンドウクラス（シングルトン）
 /*-------------------------------------------*/
-class DebugWindow final : public Singleton<DebugWindow>
+class DebugWindow final : public Singleton< DebugWindow>
 {
 	friend class Singleton< DebugWindow>;
 

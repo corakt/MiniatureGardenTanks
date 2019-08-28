@@ -72,7 +72,7 @@ void PlayerCamera::Update()
 	RotationCamera();
 
 	// カメラの揺らし処理
-	ShakeCamera();
+	shakeCamera();
 	// カメラの座標と注視点座標をセット
 	SetCameraPositionAndTarget_UpVecY(transform.position, lookAtPosition);
 	// DXライブラリのカメラとEffekseerのカメラを同期する

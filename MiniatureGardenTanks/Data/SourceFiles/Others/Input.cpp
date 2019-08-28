@@ -179,7 +179,7 @@ bool Input::GetButtonUp(UCHAR buttonCode)
 float Input::GetLeftStickX()
 {
 	// DXライブラリで設定されているスティックのデッドゾーンの値を取得する
-	static short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
+	short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
 	// 現在入力されているスティックの値がデッドゾーンの範囲外だったら、その値を返す
 	if (currentXInput.ThumbLX >  deadZoneNum ||
 		currentXInput.ThumbLX < -deadZoneNum)
@@ -198,7 +198,7 @@ float Input::GetLeftStickX()
 float Input::GetLeftStickY()
 {
 	// DXライブラリで設定されているスティックのデッドゾーンの値を取得する
-	static short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
+	short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
 	// 現在入力されているスティックの値がデッドゾーンの範囲外だったら、その値を返す
 	if (currentXInput.ThumbLY >  deadZoneNum ||
 		currentXInput.ThumbLY < -deadZoneNum)
@@ -217,7 +217,7 @@ float Input::GetLeftStickY()
 float Input::GetRightStickX()
 {
 	// DXライブラリで設定されているスティックのデッドゾーンの値を取得する
-	static short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
+	short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
 	// 現在入力されているスティックの値がデッドゾーンの範囲外だったら、その値を返す
 	if (currentXInput.ThumbRX >  deadZoneNum ||
 		currentXInput.ThumbRX < -deadZoneNum)
@@ -236,7 +236,7 @@ float Input::GetRightStickX()
 float Input::GetRightStickY()
 {
 	// DXライブラリで設定されているスティックのデッドゾーンの値を取得する
-	static short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
+	short deadZoneNum = (short)(GetJoypadDeadZone(DX_INPUT_PAD1) * 32767);
 	// 現在入力されているスティックの値がデッドゾーンの範囲外だったら、その値を返す
 	if (currentXInput.ThumbRY >  deadZoneNum || 
 		currentXInput.ThumbRY < -deadZoneNum)

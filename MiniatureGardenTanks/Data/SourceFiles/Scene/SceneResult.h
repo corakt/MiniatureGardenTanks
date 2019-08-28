@@ -34,12 +34,12 @@ public:
 
 private:
 	// バトルの結果ごとの更新処理
-	void UpdateForWinner();			// 勝利
-	void UpdateForLose();			// 敗北
+	void updateForWinner();			// 勝利
+	void updateForLose();			// 敗北
 
 	// バトルの結果ごとの描画処理
-	void DrawForWinner();			// 勝利
-	void DrawForLose();				// 敗北
+	void drawForWinner();			// 勝利
+	void drawForLose();				// 敗北
 
 	CharacterBase*    character;			// キャラクター
 	CameraBase*       camera;				// カメラ

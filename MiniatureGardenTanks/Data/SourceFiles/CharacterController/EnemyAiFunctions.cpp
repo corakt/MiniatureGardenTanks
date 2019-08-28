@@ -12,7 +12,7 @@
 /*-------------------------------------------*/
 /* 移動目標位置を設定
 /*-------------------------------------------*/
-void ControllerEnemy::SetTargetMovePosition()
+void ControllerEnemy::setTargetMovePosition()
 {
 	counters.changeMovePosInterval++;
 
@@ -21,22 +21,22 @@ void ControllerEnemy::SetTargetMovePosition()
 		MOVETARGETPOS_CHANGEINTERVAL_COUNTNUM == 1)
 	{
 		// ステージの範囲内で目標位置を決定する
-		moveTargetPosition = VGet((float)moveTargetPosRand.x(randomGenerator),0,
-		                          (float)moveTargetPosRand.z(randomGenerator));
+		moveTargetPosition = VGet((float)moveTargetPosRand.x(mt19937),0,
+		                          (float)moveTargetPosRand.z(mt19937));
 	}
 }
 
 /*-------------------------------------------*/
 /* 通過した地面のIDを取得
 /*-------------------------------------------*/
-void ControllerEnemy::GetThroughTerrainData()
+void ControllerEnemy::getThroughTerrainData()
 {
 	// 現在立っている地面のデータ
 	TerrainData currentGroundData;
 	// キャラクターの座標から、現在立っている地面のIDを取得
-	currentGroundData.id = GetTerrainIdFromPos(characterBodyTrans.position);
+	currentGroundData.id = getTerrainIdFromPos(characterBodyTrans.position);
 	// IDから位置を逆算する
-	currentGroundData.position = GetTerrainPosFromId(currentGroundData.id);
+	currentGroundData.position = getTerrainPosFromId(currentGroundData.id);
 
 	// 最後に通過した地面として登録
 	lastThroughGroundData = currentGroundData;
@@ -67,13 +67,13 @@ void ControllerEnemy::GetThroughTerrainData()
 /*-------------------------------------------*/
 /* キャラクターの位置を基準に上下左右の地面のデータを取得
 /*-------------------------------------------*/
-void ControllerEnemy::GetCharacterFourDirGroundData()
+void ControllerEnemy::getCharacterFourDirGroundData()
 {
 	// 前フレームで保存していたデータを削除する
 	fourDirGroundData.clear();
 
 	// 上下左右の四方向
-	static TerrainId direction[4] = { {0,-1},{0,+1},{-1,0},{+1,0} };
+	TerrainId direction[4] = { {0,-1},{0,+1},{-1,0},{+1,0} };
 
 	// 現在立っている地面から、上下左右の地面のデータを取得
 	for (int i = 0; i < 4; i++)
@@ -85,7 +85,7 @@ void ControllerEnemy::GetCharacterFourDirGroundData()
 		tmpGroundData.id = lastThroughGroundData.id + direction[i];
 
 		// IDから座標を算出
-		tmpGroundData.position = GetTerrainPosFromId(tmpGroundData.id);
+		tmpGroundData.position = getTerrainPosFromId(tmpGroundData.id);
 
 		// 移動目標位置との距離を算出
 		tmpGroundData.distance = VSize(tmpGroundData.position - moveTargetPosition);
@@ -98,7 +98,7 @@ void ControllerEnemy::GetCharacterFourDirGroundData()
 /*-------------------------------------------*/
 /* 視野の範囲内に存在している敵キャラクターを取得
 /*-------------------------------------------*/
-void ControllerEnemy::GetViewingRangeEnemyCharacter()
+void ControllerEnemy::getViewingRangeEnemyCharacter()
 {
 	// 視野の範囲内に存在するオブジェクトが無ければ
 	// そのまま関数を抜ける
@@ -116,7 +116,7 @@ void ControllerEnemy::GetViewingRangeEnemyCharacter()
 		if (collModel == NULL) { continue; }
 
 		// 敵キャラクターのみを登録する
-		if (collModel->GetObjectType() != ObjectType::CHARACTER_ENEMY) { continue; }
+		if (collModel->GetModelType() != ModelType::TANK_BODY) { continue; }
 
 		// 敵キャラクターの車体のトランスフォームを取得
 		Transform enemyCharaBodyTrans = collModel->GetTransform();
@@ -138,7 +138,7 @@ void ControllerEnemy::GetViewingRangeEnemyCharacter()
 /*-------------------------------------------*/
 /* キャラクターの付近に存在している壁のデータを取得
 /*-------------------------------------------*/
-void ControllerEnemy::GetAroundRangeWallData()
+void ControllerEnemy::getAroundRangeWallData()
 {
 	// キャラクター中心の円形コライダーに衝突しているオブジェクトが無ければ
 	// そのまま関数を抜ける
@@ -156,7 +156,7 @@ void ControllerEnemy::GetAroundRangeWallData()
 		if (collModel == NULL) { continue; }
 
 		// モデルの種類が壁以外だったら、スキップして次の要素へ
-		if (collModel->GetObjectType() != ObjectType::TERRAIN_WALL) { continue; }
+		if (collModel->GetModelType() != ModelType::TERRAIN_WALL) { continue; }
 
 		// ヒットしたモデルのトランスフォームを取得
 		Transform collModelTrans = collModel->GetTransform();
@@ -165,7 +165,7 @@ void ControllerEnemy::GetAroundRangeWallData()
 		TerrainData tmpWallData;
 
 		// 位置からIDを算出
-		tmpWallData.id = GetTerrainIdFromPos(collModelTrans.position);
+		tmpWallData.id = getTerrainIdFromPos(collModelTrans.position);
 
 		// 位置を取得
 		tmpWallData.position = collModelTrans.position;
@@ -182,7 +182,7 @@ void ControllerEnemy::GetAroundRangeWallData()
 /*-------------------------------------------*/
 /* 狭い範囲にキャラクターが留まり続けているか
 /*-------------------------------------------*/
-bool ControllerEnemy::IsNarrowRangeStayCharacter()
+bool ControllerEnemy::isNarrowRangeStayCharacter()
 {
 	// 通過済みの地面のデータが空であれば、そのまま関数を抜ける
 	if (throughGroundData.empty()) { return false; }
@@ -216,7 +216,7 @@ bool ControllerEnemy::IsNarrowRangeStayCharacter()
 /*-------------------------------------------*/
 /* 自分と敵との間に壁が存在しているか
 /*-------------------------------------------*/
-bool ControllerEnemy::ExistWallBetweenEnemyAndSelf(EnemyCharacterData enemy)
+bool ControllerEnemy::existWallBetweenEnemyAndSelf(EnemyCharacterData enemy)
 {
 	// レイキャストに衝突しているオブジェクトが無ければ
 	// そのままfalseを返す
@@ -237,7 +237,7 @@ bool ControllerEnemy::ExistWallBetweenEnemyAndSelf(EnemyCharacterData enemy)
 	HitModelInfo nearModel = charaViewingDirRaycast->GetHitModelInfo().front();
 
 	// モデルが壁かどうか調べる
-	if (nearModel.hitModel->GetObjectType() == ObjectType::TERRAIN_WALL)
+	if (nearModel.hitModel->GetModelType() == ModelType::TERRAIN_WALL)
 	{
 		// 敵との間に壁が存在しているとみなし、trueを返す
 		return true;
@@ -249,10 +249,10 @@ bool ControllerEnemy::ExistWallBetweenEnemyAndSelf(EnemyCharacterData enemy)
 /*-------------------------------------------*/
 /* 地形IDから地形の座標を取得
 /*-------------------------------------------*/
-VECTOR ControllerEnemy::GetTerrainPosFromId(TerrainId id)
+VECTOR ControllerEnemy::getTerrainPosFromId(TerrainId id)
 {
 	// 地形のサイズを取得
-	static const VECTOR TERRAIN_SIZE = StageManager::GetTerrainSize();
+	const VECTOR TERRAIN_SIZE = StageManager::GetTerrainSize();
 
 	// IDから地形の座標を算出
 	VECTOR ret = ZERO_VECTOR;
@@ -265,10 +265,10 @@ VECTOR ControllerEnemy::GetTerrainPosFromId(TerrainId id)
 /*-------------------------------------------*/
 /* 地形の座標から地形IDを取得
 /*-------------------------------------------*/
-TerrainId ControllerEnemy::GetTerrainIdFromPos(VECTOR position)
+TerrainId ControllerEnemy::getTerrainIdFromPos(VECTOR position)
 {
 	// 地形のサイズを取得
-	static const VECTOR TERRAIN_SIZE = StageManager::GetTerrainSize();
+	const VECTOR TERRAIN_SIZE = StageManager::GetTerrainSize();
 
 	// 指定の座標から地形のIDを算出
 	TerrainId ret;

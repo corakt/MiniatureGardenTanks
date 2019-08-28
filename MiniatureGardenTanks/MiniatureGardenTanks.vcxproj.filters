@@ -39,6 +39,12 @@
     <ClCompile Include="Data\SourceFiles\BaseObject\ModelObject.cpp">
       <Filter>BaseObject</Filter>
     </ClCompile>
+    <ClCompile Include="Data\SourceFiles\BaseObject\Object.cpp">
+      <Filter>BaseObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Data\SourceFiles\BaseObject\ObjectIdManager.cpp">
+      <Filter>BaseObject</Filter>
+    </ClCompile>
     <ClCompile Include="Data\SourceFiles\BaseObject\SoundObject.cpp">
       <Filter>BaseObject</Filter>
     </ClCompile>
@@ -168,15 +174,15 @@
     <ClCompile Include="Data\SourceFiles\Stage\TerrainWall.cpp">
       <Filter>Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Data\SourceFiles\BaseObject\GameObject.cpp">
-      <Filter>BaseObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Data\SourceFiles\BaseObject\IdGenerator.cpp">
-      <Filter>BaseObject</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\SourceFiles\BaseObject\ModelObject.h">
+      <Filter>BaseObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\SourceFiles\BaseObject\Object.h">
+      <Filter>BaseObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Data\SourceFiles\BaseObject\ObjectIdManager.h">
       <Filter>BaseObject</Filter>
     </ClInclude>
     <ClInclude Include="Data\SourceFiles\BaseObject\SoundObject.h">
@@ -307,15 +313,6 @@
     </ClInclude>
     <ClInclude Include="Data\SourceFiles\Stage\TerrainWall.h">
       <Filter>Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\SourceFiles\BaseObject\GameObject.h">
-      <Filter>BaseObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\SourceFiles\Others\ObjectType.h">
-      <Filter>Others</Filter>
-    </ClInclude>
-    <ClInclude Include="Data\SourceFiles\BaseObject\IdGenerator.h">
-      <Filter>BaseObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

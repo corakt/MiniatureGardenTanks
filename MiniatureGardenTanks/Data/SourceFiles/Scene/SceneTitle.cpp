@@ -225,12 +225,12 @@ void SceneTitle::Draw()
 	STAGE_MANAGER.DrawSkydome();
 
 	// タイトルロゴの画像を取得
-	static int titleLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::TITLE_LOGO);
+	int titleLogoSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::TITLE_LOGO);
 	// タイトルロゴを描画
 	DrawRotaGraphF(TITLELOGO_SPRITE_POS.x, TITLELOGO_SPRITE_POS.y, 0.5f, 0, titleLogoSprite, TRUE);
 
 	// スタートボタンの画像を取得
-	static int startButtonSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::START_BUTTON);
+	int startButtonSprite = SPRITE_MANAGER.GetHandle(ResourceSpriteManager::SpriteType::START_BUTTON);
 	// スタートボタンを描画
 	DrawRotaGraphF(START_BUTTON_SPRITE_POS.x, START_BUTTON_SPRITE_POS.y, 0.5f, 0, startButtonSprite, TRUE);
 }

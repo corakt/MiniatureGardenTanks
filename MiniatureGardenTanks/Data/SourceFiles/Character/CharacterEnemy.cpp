@@ -7,8 +7,7 @@
 CharacterEnemy::CharacterEnemy(UINT id, CharacterType type)
 	:CharacterBase::CharacterBase(id,type)
 {
-	// キャラクターのオブジェクトの種類を設定
-	objectType = ObjectType::CHARACTER_ENEMY;
+	
 }
 
 /*-------------------------------------------*/
@@ -24,8 +23,8 @@ CharacterEnemy::~CharacterEnemy()
 /*-------------------------------------------*/
 void CharacterEnemy::Initialize()
 {
-	// 共通のパラメータを初期化
-	InitializeCommonParameter();
+	// キャラクター共通の初期化
+	commonInitialize();
 }
 
 /*-------------------------------------------*/
@@ -33,8 +32,8 @@ void CharacterEnemy::Initialize()
 /*-------------------------------------------*/
 void CharacterEnemy::Update()
 {
-	// 共通のパラメータを更新
-	UpdateCommonParameter();
+	// キャラクター共通の更新
+	commonUpdate();
 }
 
 /*-------------------------------------------*/
@@ -42,8 +41,8 @@ void CharacterEnemy::Update()
 /*-------------------------------------------*/
 void CharacterEnemy::Draw()
 {
-	// 共通のモデルを描画
-	DrawCommonModel();
+	// キャラクター共通の描画
+	commonDraw();
 }
 
 /*-------------------------------------------*/
