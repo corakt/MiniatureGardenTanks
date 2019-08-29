@@ -6,6 +6,23 @@
 #include <EffekseerForDXLib.h>
 #include <iostream>
 
+static int startTime;      //測定開始時刻
+static int count;          //カウンタ
+static float fps;          //fps
+static const int N = 60;   //平均を取るサンプル数
+static const int FPS = 60; //設定したFPS
+
+// 待機
+static void WaitFrame()
+{
+	int tookTime = GetNowCount() - startTime;	//かかった時間
+	int waitTime = count * 1000 / FPS - tookTime;	//待つべき時間
+	if (waitTime > 0) 
+	{
+		Sleep(waitTime);	//待機
+	}
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR lpszCmdLine, int nCmdShow)
 {
 	// DirectX9を使用する
@@ -58,6 +75,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR lpszCmdLine, i
 	// メインループ
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == false)
 	{
+		if (count == 0) { //1フレーム目なら時刻を記憶
+			startTime = GetNowCount();
+		}
+		if (count == N) { //60フレーム目なら平均を計算する
+			int t = GetNowCount();
+			fps = 1000.f / ((t - startTime) / (float)N);
+			count = 0;
+			startTime = t;
+		}
+		count++;
+
 		// シーンの更新
 		sceneManager->Update();
 
@@ -77,6 +105,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR lpszCmdLine, i
 
 		// 裏画面の内容を表画面に反映
 		ScreenFlip();
+		// 60FPSになるように待機する
+		WaitFrame();
 
 		// 画面内の"printfDx"の内容をクリア
 		clsDx();
