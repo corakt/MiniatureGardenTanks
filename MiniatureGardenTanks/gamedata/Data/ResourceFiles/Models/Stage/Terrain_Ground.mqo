@@ -1,0 +1,49 @@
+Metasequoia Document
+Format Text Ver 1.1
+
+Scene {
+	pos -7.8432474 -209.26727 1500
+	lookat 0 0 0
+	head -49.5818
+	pich 0.8608
+	bank 0.0000
+	ortho 0
+	zoom2 4.9998
+	amb 0.250 0.250 0.250
+	frontclip 225.00002
+	backclip 45000
+	dirlights 1 {
+		light {
+			dir 0.408 0.408 0.816
+			color 1.000 1.000 1.000
+		}
+	}
+}
+Material 1 {
+	"mat1" shader(3) col(1.000 1.000 1.000 1.000) dif(0.400) amb(0.100) emi(0.512) spc(0.150) power(18.75) reflect(0.188) refract(1.900) tex("Data/ResourceFiles/Models/Stage/Texture_Terrain_Ground.jpg") bump("Data/ResourceFiles/Models/Stage/Texture_Terrain_Ground_Normal.png")
+}
+Object "obj1" {
+	depth 0
+	folding 0
+	scale 1 1 1
+	rotation 0 0 0
+	translation 0 0 0
+	visible 15
+	locking 0
+	shading 1
+	facet 59.5
+	normal_weight 1
+	color 0.898 0.498 0.698
+	color_type 0
+	vertex 4 {
+		-250 0 -250
+		250 0 -250
+		-250 0 250
+		250 0 250
+	}
+	face 2 {
+		3 V(1 3 2) M(0) UV(1 0 1 1 0 1)
+		3 V(1 2 0) M(0) UV(1 0 0 1 0 0)
+	}
+}
+Eof
